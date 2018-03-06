@@ -39,9 +39,11 @@
 
       <h1>CodeU Chat App</h1>
       <h2>Welcome to ~Team 31~'s chat app!</h2>
-      <p>Who is Team 31, you ask? We are an east coast-based team of CodeUers (plus
-          our PA Will, who is in Sunnyvale): Ellen Fu, Joyce Zhao, Pete Destil,
-          and Ransford Antwi! </p>
+      <p>
+      Who is Team 31, you ask? We are an east coast-based team of CodeUers (plus
+      our PA Will, who is in Sunnyvale, CA): Ellen Fu, Joyce Zhao, Pete Destil,
+      and Ransford Antwi!
+      </p>
 
       <ul>
         <li><a href="/login">Login</a> to get started.</li>
