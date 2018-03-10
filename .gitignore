@@ -9,3 +9,6 @@ target
 .settings
 *.iml
 .DS_STORE
+
+# Ignore temp files from Sublime.
+._.*
