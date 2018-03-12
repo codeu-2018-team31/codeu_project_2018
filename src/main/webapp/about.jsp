@@ -38,6 +38,12 @@
 
       <h1>About the CodeU Chat App</h1>
       <p>
+        This is a Chat App created by Spring 2018 CodeU Team 31! 
+        We are a group of college students from around the East Coast: Ellen, Joyce, Pete, and Ransford. 
+        Oh, and we have an awesome PA, Will! 
+        Stay tuned to see this Chat App get more come to life over the semester!
+      </p>
+      <p>
         This is an example chat application designed to be a starting point
         for your CodeU project team work. Here's some stuff to think about:
       </p>
