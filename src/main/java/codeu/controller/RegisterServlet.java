@@ -11,10 +11,21 @@ import javax.servlet.http.HttpServletResponse;
 */
 public class RegisterServlet extends HttpServlet {
 
- @Override
- public void doGet(HttpServletRequest request, HttpServletResponse response)
-     throws IOException, ServletException {
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
 
-   response.getWriter().println("<h1>RegisterServlet GET request.</h1>");
- }
+    response.getWriter().println("<h1>RegisterServlet GET request.</h1>");
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
+
+    String username = request.getParameter("username");
+    String password = request.getParameter("password");
+
+    response.getWriter().println("<p>Username: " + username + "</p>");
+    response.getWriter().println("<p>Password: " + password + "</p>");
+  }
 }
