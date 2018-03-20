@@ -30,6 +30,7 @@ public class User {
    * @param id the ID of this User
    * @param name the username of this User
    * @param creation the creation time of this User
+   * @param password the password of the user
    */
   public User(UUID id, String name, Instant creation, String password) {
     this.id = id;
@@ -53,6 +54,7 @@ public class User {
     return creation;
   }
 
+  /** Returns the passeord of the user */
   public String getPassword () {
     return password;
   }
