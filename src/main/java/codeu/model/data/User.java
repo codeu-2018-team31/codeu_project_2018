@@ -54,7 +54,7 @@ public class User {
     return creation;
   }
 
-  /** Returns the password of the user */
+  /** Returns the password of the User */
   public String getPassword () {
     return password;
   }
