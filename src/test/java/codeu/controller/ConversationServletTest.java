@@ -104,8 +104,9 @@ public class ConversationServletTest {
   public void testDoPost_BadConversationName() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("bad !@#$% name");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
+    Mockito.when(mockSession.getAttribute("password")).thenReturn("test_password");
 
-    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now());
+    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password");
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
 
     conversationServlet.doPost(mockRequest, mockResponse);
@@ -120,8 +121,9 @@ public class ConversationServletTest {
   public void testDoPost_ConversationNameTaken() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
+    Mockito.when(mockSession.getAttribute("password")).thenReturn("test_password");
 
-    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now());
+    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password");
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
 
     Mockito.when(mockConversationStore.isTitleTaken("test_conversation")).thenReturn(true);
@@ -137,8 +139,9 @@ public class ConversationServletTest {
   public void testDoPost_NewConversation() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
+    Mockito.when(mockSession.getAttribute("password")).thenReturn("test_password");
 
-    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now());
+    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password");
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
 
     Mockito.when(mockConversationStore.isTitleTaken("test_conversation")).thenReturn(false);
