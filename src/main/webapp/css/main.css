@@ -45,6 +45,13 @@ nav a {
   width: 800px;
 }
 
+#chat {
+  background-color: white;
+  height: 500px;
+  overflow-y: scroll;
+}
+
+
 h1 {
   color: #757575;
 }
@@ -55,4 +62,9 @@ input {
 
 button {
   font-size: 18px;
+}
+
+textarea {
+    resize: vertical;
+    width: 100%;
 }
