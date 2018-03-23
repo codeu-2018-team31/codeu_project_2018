@@ -39,9 +39,7 @@ public class RegisterServletTest {
 
    Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
  }
-<<<<<<< HEAD
 }
-=======
 
  @Test
  public void testDoPost_BadUsername() throws IOException, ServletException {
@@ -98,4 +96,3 @@ public class RegisterServletTest {
    Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
  }
 }
->>>>>>> 9d6551a48355d1692e432e0defbf876898c9c192

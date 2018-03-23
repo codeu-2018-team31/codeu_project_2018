@@ -33,6 +33,7 @@ public class RegisterServlet extends HttpServlet {
 
     String username = request.getParameter("username");
     String password = request.getParameter("password");
+    String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
 
     if (!username.matches("[\\w*\\s*]*")) {
       request.setAttribute("error", "Please enter only letters, numbers, and spaces.");
@@ -46,19 +47,12 @@ public class RegisterServlet extends HttpServlet {
       return;
     }
 
-    User user = new User(UUID.randomUUID(), username, Instant.now(), password);
+    User user = new User(UUID.randomUUID(), username, Instant.now(), passwordHash);
     userStore.addUser(user);
 
     response.sendRedirect("/login");
   }
 
-<<<<<<< HEAD
- @Override
- public void doGet(HttpServletRequest request, HttpServletResponse response)
-     throws IOException, ServletException {
-	request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
- }
-=======
   /**
    * Set up state for handling registration-related requests. This method is only called when
    * running in a server, not when running in a test.
@@ -76,5 +70,4 @@ public class RegisterServlet extends HttpServlet {
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
   }
->>>>>>> 9d6551a48355d1692e432e0defbf876898c9c192
 }
