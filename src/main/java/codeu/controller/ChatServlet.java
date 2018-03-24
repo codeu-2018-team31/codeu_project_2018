@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
 
 /** Servlet class responsible for the chat page. */
@@ -141,7 +142,10 @@ public class ChatServlet extends HttpServlet {
     String messageContent = request.getParameter("message");
 
     // this removes any HTML from the message content
-    String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
+    Document.OutputSettings settings = new Document.OutputSettings();
+    settings.prettyPrint(false);
+    String cleanedMessageContent = Jsoup.clean(messageContent, "",
+        Whitelist.basicWithImages(), settings);
 
     Message message =
         new Message(
