@@ -141,7 +141,7 @@ public class ChatServlet extends HttpServlet {
 
     String messageContent = request.getParameter("message");
 
-    // this removes any HTML from the message content
+    // remove all but basic styling HTML and img tags from the message content
     Document.OutputSettings settings = new Document.OutputSettings();
     settings.prettyPrint(false);
     String cleanedMessageContent = Jsoup.clean(messageContent, "",
