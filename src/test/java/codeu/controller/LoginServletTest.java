@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class LoginServletTest {
 
@@ -75,16 +76,18 @@ public class LoginServletTest {
   @Test
   public void testDoPost_ExistingUser() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
-    Mockito.when(mockRequest.getParameter("password")).thenReturn("test password");
+    Mockito.when(mockRequest.getParameter("password")).thenReturn(BCrypt.hashpw("test password", BCrypt.gensalt()));
 
     UserStore mockUserStore = Mockito.mock(UserStore.class);
-    User fakeUser = new User(UUID.randomUUID(), "test username", Instant.now(), "test password");
+    User fakeUser = new User(UUID.randomUUID(), "test username", Instant.now(), BCrypt.hashpw("test password", BCrypt.gensalt()));
     Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(true);
     Mockito.when(mockUserStore.getUser("test username")).thenReturn(fakeUser);
     loginServlet.setUserStore(mockUserStore);
 
     HttpSession mockSession = Mockito.mock(HttpSession.class);
     Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+    mockSession.setAttribute("user", "test username");
+    mockResponse.sendRedirect("/conversations");
 
     loginServlet.doPost(mockRequest, mockResponse);
 

@@ -22,7 +22,7 @@ public class User {
   private final UUID id;
   private final String name;
   private final Instant creation;
-  private final String password;
+  private final String hashedPassword;
 
   /**
    * Constructs a new User.
@@ -32,11 +32,11 @@ public class User {
    * @param creation the creation time of this User
    * @param password the password of this User
    */
-  public User(UUID id, String name, Instant creation, String password) {
+  public User(UUID id, String name, Instant creation, String hashedPassword) {
     this.id = id;
     this.name = name;
     this.creation = creation;
-    this.password = password;
+    this.hashedPassword = hashedPassword;
   }
 
   /** Returns the ID of this User. */
@@ -56,6 +56,6 @@ public class User {
 
   /** Returns the password of the User. */
   public String getPassword () {
-    return password;
+    return hashedPassword;
   }
 }
