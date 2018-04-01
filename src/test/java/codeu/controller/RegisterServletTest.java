@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 
 import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 public class RegisterServletTest {
