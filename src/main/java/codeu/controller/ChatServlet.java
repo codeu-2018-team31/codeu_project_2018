@@ -150,11 +150,10 @@ public class ChatServlet extends HttpServlet {
     String cleanedMessageContent = Jsoup.clean(messageContent, "",
         Whitelist.basicWithImages(), settings);
 
-    // Regex for matching a URL
-    Matcher m = Pattern.compile("[\\w]+\\:\\/\\/[\\S]+").matcher(cleanedMessageContent);
-    while (m.find()) {
-      
-    }
+    // Replace all URLs in the message with an HTML link
+    cleanedMessageContent.replaceAll(
+        "(.*://[^<>[:space:]]+[[:alnum:]/])",
+        "<a href=\"$1\">$1</a>");
 
     Message message =
         new Message(
