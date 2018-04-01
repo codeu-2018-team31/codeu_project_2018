@@ -150,12 +150,6 @@ public class ChatServlet extends HttpServlet {
     String cleanedMessageContent = Jsoup.clean(messageContent, "",
         Whitelist.basicWithImages(), settings);
 
-    // Regex for matching a URL
-    Matcher m = Pattern.compile("[\\w]+\\:\\/\\/[\\S]+").matcher(cleanedMessageContent);
-    while (m.find()) {
-      
-    }
-
     Message message =
         new Message(
             UUID.randomUUID(),
