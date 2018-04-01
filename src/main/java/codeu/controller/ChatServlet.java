@@ -20,15 +20,19 @@ import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
 
 /** Servlet class responsible for the chat page. */
@@ -89,7 +93,7 @@ public class ChatServlet extends HttpServlet {
 
     Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
     if (conversation == null) {
-      // couldn't find conversation, redirect to conversation list
+      // Couldn't find conversation, redirect to conversation list
       System.out.println("Conversation was null: " + conversationTitle);
       response.sendRedirect("/conversations");
       return;
@@ -116,14 +120,14 @@ public class ChatServlet extends HttpServlet {
 
     String username = (String) request.getSession().getAttribute("user");
     if (username == null) {
-      // user is not logged in, don't let them add a message
+      // User is not logged in, don't let them add a message
       response.sendRedirect("/login");
       return;
     }
 
     User user = userStore.getUser(username);
     if (user == null) {
-      // user was not found, don't let them add a message
+      // User was not found, don't let them add a message
       response.sendRedirect("/login");
       return;
     }
@@ -133,15 +137,18 @@ public class ChatServlet extends HttpServlet {
 
     Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
     if (conversation == null) {
-      // couldn't find conversation, redirect to conversation list
+      // Couldn't find conversation, redirect to conversation list
       response.sendRedirect("/conversations");
       return;
     }
 
     String messageContent = request.getParameter("message");
 
-    // this removes any HTML from the message content
-    String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
+    // Remove all but basic styling HTML and img tags from the message content
+    Document.OutputSettings settings = new Document.OutputSettings();
+    settings.prettyPrint(false);
+    String cleanedMessageContent = Jsoup.clean(messageContent, "",
+        Whitelist.basicWithImages(), settings);
 
     Message message =
         new Message(
@@ -153,7 +160,7 @@ public class ChatServlet extends HttpServlet {
 
     messageStore.addMessage(message);
 
-    // redirect to a GET request
+    // Redirect to a GET request
     response.sendRedirect("/chat/" + conversationTitle);
   }
 }
