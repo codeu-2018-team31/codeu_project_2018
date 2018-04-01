@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -146,6 +149,12 @@ public class ChatServlet extends HttpServlet {
     settings.prettyPrint(false);
     String cleanedMessageContent = Jsoup.clean(messageContent, "",
         Whitelist.basicWithImages(), settings);
+
+    // Regex for matching a URL
+    Matcher m = Pattern.compile("[\\w]+\\:\\/\\/[\\S]+").matcher(cleanedMessageContent);
+    while (m.find()) {
+      
+    }
 
     Message message =
         new Message(
