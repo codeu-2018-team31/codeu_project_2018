@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,6 +35,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.parser.Tag;
 import org.jsoup.safety.Whitelist;
 
 /** Servlet class responsible for the chat page. */
@@ -150,9 +155,8 @@ public class ChatServlet extends HttpServlet {
     String cleanedMessageContent = Jsoup.clean(messageContent, "",
         Whitelist.basicWithImages(), settings);
 
-    // Replace all URLs in the message with an HTML link
-    cleanedMessageContent.replaceAll(
-        "(.*://[^<>[:space:]]+[[:alnum:]/])",
+    cleanedMessageContent = cleanedMessageContent.replaceAll(
+        "([\\w]+\\:\\/\\/[\\S]+)",
         "<a href=\"$1\">$1</a>");
 
     Message message =
