@@ -16,6 +16,8 @@ import org.mockito.Mockito;
 import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 public class RegisterServletTest {
 
  private RegisterServlet registerServlet;
@@ -55,7 +57,7 @@ public class RegisterServletTest {
  public void testDoPost_NewUser() throws IOException, ServletException {
    Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
    Mockito.when(mockRequest.getParameter("password")).thenReturn("test password");
-
+   
    UserStore mockUserStore = Mockito.mock(UserStore.class);
    Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(false);
    registerServlet.setUserStore(mockUserStore);
@@ -66,10 +68,10 @@ public class RegisterServletTest {
    registerServlet.doPost(mockRequest, mockResponse);
 
    ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-
    Mockito.verify(mockUserStore).addUser(userArgumentCaptor.capture());
+
    Assert.assertEquals(userArgumentCaptor.getValue().getName(), "test username");
-   Assert.assertEquals(userArgumentCaptor.getValue().getPassword(), "test password");
+   Assert.assertNotEquals(userArgumentCaptor.getValue().getPassword(), "test password");
 
    Mockito.verify(mockResponse).sendRedirect("/login");
  }

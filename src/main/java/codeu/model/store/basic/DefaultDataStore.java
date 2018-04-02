@@ -18,11 +18,14 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * This class makes it easy to add dummy data to your chat app instance. To use fake data, set
@@ -99,7 +102,7 @@ public class DefaultDataStore {
 
     for (int i = 0; i < DEFAULT_USER_COUNT; i++) {
         User user = new User(UUID.randomUUID(), randomUsernames.get(i), Instant.now(), 
-          randomUsernames.get(i));
+          BCrypt.hashpw("password", BCrypt.gensalt()));
       PersistentStorageAgent.getInstance().writeThrough(user);
       users.add(user);
     }
