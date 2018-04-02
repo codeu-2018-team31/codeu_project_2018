@@ -23,6 +23,7 @@ public class User {
   private final String name;
   private final Instant creation;
   private final String hashedPassword;
+  private String about;
 
   /**
    * Constructs a new User.
@@ -37,6 +38,7 @@ public class User {
     this.name = name;
     this.creation = creation;
     this.hashedPassword = hashedPassword;
+    this.about = "";
   }
 
   /** Returns the ID of this User. */
@@ -55,7 +57,15 @@ public class User {
   }
 
   /** Returns the password of the User. */
-  public String getPassword () {
+  public String getPassword() {
     return hashedPassword;
   }
+
+  public String getAbout() {
+    return about;
+  }
+
+  public void setAbout(String about) {
+    this.about = about;
+  } 
 }
