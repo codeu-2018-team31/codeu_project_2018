@@ -29,7 +29,7 @@ public class UserTest {
     Instant creation = Instant.now();
     String about = "";
 
-    User user = new User(id, name, creation, password);
+    User user = new User(id, name, creation, password, about);
 
     Assert.assertEquals(id, user.getId());
     Assert.assertEquals(name, user.getName());

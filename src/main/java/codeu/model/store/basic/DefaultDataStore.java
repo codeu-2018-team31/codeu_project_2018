@@ -102,7 +102,7 @@ public class DefaultDataStore {
 
     for (int i = 0; i < DEFAULT_USER_COUNT; i++) {
         User user = new User(UUID.randomUUID(), randomUsernames.get(i), Instant.now(), 
-          BCrypt.hashpw("password", BCrypt.gensalt()));
+          BCrypt.hashpw("password", BCrypt.gensalt()), getRandomAboutContent());
       PersistentStorageAgent.getInstance().writeThrough(user);
       users.add(user);
     }
@@ -186,5 +186,21 @@ public class DefaultDataStore {
     String messageContent = loremIpsum.substring(startIndex, endIndex).trim();
 
     return messageContent;
+  }
+
+  private String getRandomAboutContent() {
+    String loremIpsum =
+        "dolorem ipsum, quia dolor sit amet consectetur adipiscing velit, "
+            + "sed quia non numquam do eius modi tempora incididunt, ut labore et dolore magnam "
+            + "aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam "
+            + "corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum "
+            + "iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, "
+            + "qui dolorem eum fugiat, quo voluptas nulla pariatur";
+
+    int startIndex = (int) (Math.random() * (loremIpsum.length() - 100));
+    int endIndex = (int) (startIndex + 10 + Math.random() * 90);
+    String aboutContent = loremIpsum.substring(startIndex, endIndex).trim();
+
+    return aboutContent;
   }
 }

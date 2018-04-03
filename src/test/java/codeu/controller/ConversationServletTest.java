@@ -106,7 +106,7 @@ public class ConversationServletTest {
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
     Mockito.when(mockSession.getAttribute("password")).thenReturn("test_password");
 
-    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password");
+    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password", "test_about");
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
 
     conversationServlet.doPost(mockRequest, mockResponse);
@@ -122,8 +122,9 @@ public class ConversationServletTest {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
     Mockito.when(mockSession.getAttribute("password")).thenReturn("test_password");
+    Mockito.when(mockSession.getAttribute("about")).thenReturn("test_about");
 
-    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password");
+    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password", "test_about");
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
 
     Mockito.when(mockConversationStore.isTitleTaken("test_conversation")).thenReturn(true);
@@ -140,8 +141,9 @@ public class ConversationServletTest {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
     Mockito.when(mockSession.getAttribute("password")).thenReturn("test_password");
+    Mockito.when(mockSession.getAttribute("about")).thenReturn("test_about");
 
-    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password");
+    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password", "test_about");
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
 
     Mockito.when(mockConversationStore.isTitleTaken("test_conversation")).thenReturn(false);
