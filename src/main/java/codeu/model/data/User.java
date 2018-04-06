@@ -43,8 +43,8 @@ public class User {
   }
 
   /**
-   * Constructs a new User to be used during Registration with default about information
-   *
+   * Constructs a new User to be used during Registration. 
+   * Includes default about information of an empty string.
    * @param id the ID of this User
    * @param name the username of this User
    * @param creation the creation time of this User
@@ -55,7 +55,7 @@ public class User {
     this.name = name;
     this.creation = creation;
     this.hashedPassword = hashedPassword;
-    this.about = "about";
+    this.about = "";
   }
 
   /** Returns the ID of this User. */

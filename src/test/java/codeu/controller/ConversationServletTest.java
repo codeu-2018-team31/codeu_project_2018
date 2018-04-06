@@ -44,10 +44,10 @@ public class ConversationServletTest {
   private ConversationStore mockConversationStore;
   private UserStore mockUserStore;
 
-  private final String TEST_USERNAME = "test_username";
-  private final String TEST_PASSWORD = "test_password";
-  private final String TEST_ABOUT = "test_about";
-  private final String TEST_CONVERSATION = "test_conversation";
+  static final String TEST_USERNAME = "test_username";
+  static final String TEST_PASSWORD = "test_password";
+  static final String TEST_ABOUT = "test_about";
+  static final String TEST_CONVERSATION = "test_conversation";
 
   @Before
   public void setup() {

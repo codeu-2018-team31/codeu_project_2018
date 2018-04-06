@@ -47,9 +47,9 @@ public class ChatServletTest {
   private MessageStore mockMessageStore;
   private UserStore mockUserStore;
 
-  private final String TEST_USERNAME = "test username";
-  private final String TEST_PASSWORD = "test password";
-  private final String TEST_ABOUT = "test about";
+  static final String TEST_USERNAME = "test username";
+  static final String TEST_PASSWORD = "test password";
+  static final String TEST_ABOUT = "test about";
 
   @Before
   public void setup() {
