@@ -27,11 +27,16 @@ public class UserTest {
     String name = "test_username";
     String password = "test_password";
     Instant creation = Instant.now();
+    String about = "";
 
-    User user = new User(id, name, creation, password);
+    User user = new User(id, name, creation, password, about);
 
     Assert.assertEquals(id, user.getId());
     Assert.assertEquals(name, user.getName());
     Assert.assertEquals(creation, user.getCreationTime());
+    Assert.assertEquals(about, user.getAbout());
+
+    user.setAbout("test about me");
+    Assert.assertEquals("test about me", user.getAbout());
   }
 }

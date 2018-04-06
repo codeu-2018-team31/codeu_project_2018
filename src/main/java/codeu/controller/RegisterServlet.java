@@ -36,6 +36,7 @@ public class RegisterServlet extends HttpServlet {
     String username = request.getParameter("username");
     String password = request.getParameter("password");
     String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
+    String about = request.getParameter("about");
     
 
     if (!username.matches("[\\w*\\s*]*")) {
@@ -50,7 +51,7 @@ public class RegisterServlet extends HttpServlet {
       return;
     }
 
-    User user = new User(UUID.randomUUID(), username, Instant.now(), passwordHash);
+    User user = new User(UUID.randomUUID(), username, Instant.now(), passwordHash, about);
     userStore.addUser(user);
 
     response.sendRedirect("/login");
