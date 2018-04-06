@@ -38,6 +38,9 @@
      <label for="password">Password: </label>
      <input type="password" name="password" id="password">
      <br/><br/>
+     <label for="about">About You (Optional): </label>
+     <textarea name="about" rows="10"></textarea>
+     <br/><br/>
      <button type="submit">Submit</button>
    </form>
  </div>

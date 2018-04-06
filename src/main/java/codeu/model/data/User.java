@@ -23,10 +23,28 @@ public class User {
   private final String name;
   private final Instant creation;
   private final String hashedPassword;
+  private String about;
 
   /**
    * Constructs a new User.
    *
+   * @param id the ID of this User
+   * @param name the username of this User
+   * @param creation the creation time of this User
+   * @param password the password of this User
+   * @param about the about information of this User
+   */
+  public User(UUID id, String name, Instant creation, String hashedPassword, String about) {
+    this.id = id;
+    this.name = name;
+    this.creation = creation;
+    this.hashedPassword = hashedPassword;
+    this.about = about;
+  }
+
+  /**
+   * Constructs a new User to be used during Registration. 
+   * Includes default about information of an empty string.
    * @param id the ID of this User
    * @param name the username of this User
    * @param creation the creation time of this User
@@ -37,6 +55,7 @@ public class User {
     this.name = name;
     this.creation = creation;
     this.hashedPassword = hashedPassword;
+    this.about = "";
   }
 
   /** Returns the ID of this User. */
@@ -55,7 +74,15 @@ public class User {
   }
 
   /** Returns the password of the User. */
-  public String getPassword () {
+  public String getPassword() {
     return hashedPassword;
   }
+
+  public String getAbout() {
+    return about;
+  }
+
+  public void setAbout(String about) {
+    this.about = about;
+  } 
 }
