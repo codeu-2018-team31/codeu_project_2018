@@ -47,6 +47,10 @@ public class ChatServletTest {
   private MessageStore mockMessageStore;
   private UserStore mockUserStore;
 
+  private final String TEST_USERNAME = "test username";
+  private final String TEST_PASSWORD = "test password";
+  private final String TEST_ABOUT = "test about";
+
   @Before
   public void setup() {
     chatServlet = new ChatServlet();
@@ -121,8 +125,8 @@ public class ChatServletTest {
 
   @Test
   public void testDoPost_InvalidUser() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
-    Mockito.when(mockUserStore.getUser("test_username")).thenReturn(null);
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
+    Mockito.when(mockUserStore.getUser(TEST_USERNAME)).thenReturn(null);
 
     chatServlet.doPost(mockRequest, mockResponse);
 
@@ -133,12 +137,12 @@ public class ChatServletTest {
   @Test
   public void testDoPost_ConversationNotFound() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
-    Mockito.when(mockSession.getAttribute("password")).thenReturn("test_password");
-    Mockito.when(mockSession.getAttribute("about")).thenReturn("test_about");
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
+    Mockito.when(mockSession.getAttribute("password")).thenReturn(TEST_PASSWORD);
+    Mockito.when(mockSession.getAttribute("about")).thenReturn(TEST_ABOUT);
 
-    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password", "test_about");
-    Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
+    User fakeUser = new User(UUID.randomUUID(), TEST_USERNAME, Instant.now(), TEST_PASSWORD, TEST_ABOUT);
+    Mockito.when(mockUserStore.getUser(TEST_USERNAME)).thenReturn(fakeUser);
 
     Mockito.when(mockConversationStore.getConversationWithTitle("test_conversation"))
         .thenReturn(null);
@@ -152,12 +156,12 @@ public class ChatServletTest {
   @Test
   public void testDoPost_StoresMessage() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
-    Mockito.when(mockSession.getAttribute("password")).thenReturn("test_password");
-    Mockito.when(mockSession.getAttribute("about")).thenReturn("test_about");
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
+    Mockito.when(mockSession.getAttribute("password")).thenReturn(TEST_PASSWORD);
+    Mockito.when(mockSession.getAttribute("about")).thenReturn(TEST_ABOUT);
 
-    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password", "test_about");
-    Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
+    User fakeUser = new User(UUID.randomUUID(), TEST_USERNAME, Instant.now(), TEST_PASSWORD, TEST_ABOUT);
+    Mockito.when(mockUserStore.getUser(TEST_USERNAME)).thenReturn(fakeUser);
 
     Conversation fakeConversation =
         new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
@@ -178,12 +182,12 @@ public class ChatServletTest {
   @Test
   public void testDoPost_CleansHtmlContent() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
-    Mockito.when(mockSession.getAttribute("password")).thenReturn("test_password");
-    Mockito.when(mockSession.getAttribute("about")).thenReturn("test_about");
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
+    Mockito.when(mockSession.getAttribute("password")).thenReturn(TEST_PASSWORD);
+    Mockito.when(mockSession.getAttribute("about")).thenReturn(TEST_ABOUT);
 
-    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password", "test_about");
-    Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
+    User fakeUser = new User(UUID.randomUUID(), TEST_USERNAME, Instant.now(), TEST_PASSWORD, TEST_ABOUT);
+    Mockito.when(mockUserStore.getUser(TEST_USERNAME)).thenReturn(fakeUser);
 
     Conversation fakeConversation =
         new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
