@@ -17,6 +17,12 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%
+String about = request.getAttribute("about");
+UUID profileID = UUID.fromString(requestUrl.substring("/profile/".length()));
+UUID userID = request.getSession().getAttribute("user").getID();
+%>
+
 
 <!DOCTYPE html>
 <html>
@@ -50,33 +56,31 @@
   <div id="container">
     <div
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
-      <% if(request.getSession().getAttribute("user") != null) { %>
-        <h1><%= request.getSession().getAttribute("user") %>'s Profile Page</h1>
-      <% } else { %>
-        <h1>Profile</h1>
-      <% } %>
+      <%
+        String profileName = UserStore.getInstance()
+          .getUser(profileID).getName();
+      %>
+      <h1><%= profileName %>'s Profile Page</h1>
+      
       <hr/>
 
       <h2>About</h2>
-      <% if(request.getSession().getAttribute("user") != null) { %>
-        <h1>About <%= request.getSession().getAttribute("user") %></h1>
+        <h1>About <%= profileName %></h1>
         <p>
-          <%= request.getSession().getAttribute("about") %>
+          <%= about %>
         </p>
+      <% if(profileID.equals(userID)) { %>
         <h3>Edit your About Me (only you can see this)</h3>
 
-          <form action="/profile" method="POST">
-            <textarea name="editAbout" rows="10"></textarea>
+          <form action="/profile/ <%= profileID.toString() %>" method="POST">
+            <textarea name="editAbout" rows="10"> 
+              <%= about %> 
+            </textarea>
             <br/><br/>
             <input type="submit" value="Submit">
           </form>
 
           <hr/>
-
-      <% } else { %>
-      <p>
-        This is where the About description of the user will be displayed!
-      </p>
 
       <h2>Sent Messages</h2>
 
