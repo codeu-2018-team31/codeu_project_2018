@@ -23,6 +23,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /** Servlet class responsible for the profile page.
     * Provides methods for accessing and editing about information when user requests the /profile URL.
     */
@@ -58,8 +61,16 @@ public class ProfileServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+
     String requestUrl = request.getRequestURI();
-    UUID profileID = UUID.fromString(requestUrl.substring("/profile/".length()));
+    Matcher m = Pattern.compile("^/profile/(.+)").matcher(requestUrl);
+    if (!m.find()) {
+      System.out.println("wrong URL pattern: " + requestUrl);
+      return; // return error 
+    }
+    String extractedId = m.group(1);
+    System.out.println("extracted Id from URL (doGet): " + extractedId);
+    UUID profileId = UUID.fromString(extractedId);
 
     String username = (String) request.getSession().getAttribute("user");
     if (username == null) {
@@ -69,18 +80,15 @@ public class ProfileServlet extends HttpServlet {
       return;
     }
 
-    User user = userStore.getUser(profileID);
+    User user = userStore.getUser(profileId);
     if (user == null) {
       // Couldn't find user, redirect to conversation list
-      System.out.println("User does not exist: " + profileID);
+      System.out.println("User does not exist: " + profileId);
       response.sendRedirect("/conversations");
       return;
     }
 
-    // Gets the about info of the profile's user
-    String profileAbout = userStore.getUser(profileID).getAbout();
-
-    request.setAttribute("about", profileAbout);
+    request.setAttribute("user", user);
     request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
   }
 
@@ -92,16 +100,24 @@ public class ProfileServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    String requestUrl = request.getRequestURI();
-    UUID userID = ((User) request.getSession().getAttribute("user")).getId();
-    UUID profileID = UUID.fromString(requestUrl.substring("/profile/".length()));
+    UUID userId = ((User) request.getSession().getAttribute("user")).getId();
 
-    if(userID.equals(profileID)) {
+    String requestUrl = request.getRequestURI();
+    Matcher m = Pattern.compile("^/profile/(.+)").matcher(requestUrl);
+    if (!m.find()) {
+      System.out.println("wrong URL pattern: " + requestUrl);
+      return; // return error 
+    }
+    String extractedId = m.group(1);
+    System.out.println("extracted Id from URL (doPost): " + extractedId);
+    UUID profileId = UUID.fromString(extractedId);
+
+    if(userId.equals(profileId)) {
       // User is viewing their own profile page
       String about = request.getParameter("editAbout");
-      userStore.getUser(userID).setAbout(about);
+      userStore.getUser(userId).setAbout(about);
       request.getSession().setAttribute("about", about);
     }
-    response.sendRedirect("/profile/" + userID.toString());
+    response.sendRedirect("/profile/" + userId.toString());
   }
 }
