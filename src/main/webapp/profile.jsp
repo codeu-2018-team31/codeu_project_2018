@@ -17,10 +17,10 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+
 <%
-String about = request.getAttribute("about");
-UUID profileID = UUID.fromString(requestUrl.substring("/profile/".length()));
-UUID userID = request.getSession().getAttribute("user").getID();
+User loggedInUser = UserStore.getUser(request.getSession().getAttribute("user"));
+User profileUser = request.getAttribute("user");
 %>
 
 
@@ -44,8 +44,8 @@ UUID userID = request.getSession().getAttribute("user").getID();
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
-      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+    <% if(loggedInUser != null){ %>
+      <a>Hello <%= loggedInUser.getName(); %>!</a>
     <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
@@ -57,21 +57,21 @@ UUID userID = request.getSession().getAttribute("user").getID();
     <div
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
 
-      <h1><%= request.getAttribute("user").getName(); %>'s Profile Page</h1>
+      <h1><%= profileUser.getName(); %>'s Profile Page</h1>
       
       <hr/>
 
       <h2>About</h2>
-        <h1>About <%= profileName %></h1>
-        <p>
-          <%= about %>
+        <h1>About <%= profileUser.getName(); %></h1>
+        <p href="aboutDisplay">
+          <%= profileUser.getAbout(); %>
         </p>
-      <% if(profileID.equals(userID)) { %>
+      <% if(profileUser.getId().equals(loggedInUser.getId());) { %>
         <h3>Edit your About Me (only you can see this)</h3>
 
-          <form action="/profile/ <%= profileID.toString() %>" method="POST">
+          <form action="/profile/ <%= loggedInUser.getId().toString() %>" method="POST">
             <textarea name="editAbout" rows="10"> 
-              <%= about %> 
+              <%= loggedInUser.getAbout(); %> 
             </textarea>
             <br/><br/>
             <input type="submit" value="Submit">
