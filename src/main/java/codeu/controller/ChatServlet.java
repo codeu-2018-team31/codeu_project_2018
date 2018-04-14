@@ -160,9 +160,6 @@ public class ChatServlet extends HttpServlet {
         "([\\w]+\\:\\/\\/[\\S]+)",
         "<a href=\"$1\">$1</a>");
 
-    // Parse emojis
-    messageContent = EmojiParser.parseToUnicode(messageContent);
-
     Message message =
         new Message(
             UUID.randomUUID(),

@@ -226,32 +226,5 @@ public class ChatServletTest {
 
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
   }
-
-  @Test
-  public void testDoPost_Emojis() throws IOException, ServletException {
-    Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
-    Mockito.when(mockSession.getAttribute("password")).thenReturn("test_password");
-
-    User fakeUser = new User(UUID.randomUUID(), "test_username", Instant.now(), "test_password");
-    Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
-
-    Conversation fakeConversation =
-        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
-    Mockito.when(mockConversationStore.getConversationWithTitle("test_conversation"))
-        .thenReturn(fakeConversation);
-
-    Mockito.when(mockRequest.getParameter("message"))
-        .thenReturn("An :grinning:awesome :smiley:string &#128516;with a few :wink:emojis!");
-
-    chatServlet.doPost(mockRequest, mockResponse);
-
-    ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
-    Mockito.verify(mockMessageStore).addMessage(messageArgumentCaptor.capture());
-    Assert.assertEquals(
-        "An 😀awesome 😃string 😄with a few 😉emojis!", messageArgumentCaptor.getValue().getContent());
-
-    Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
-  }
   
 }

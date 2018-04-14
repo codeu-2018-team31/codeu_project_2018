@@ -75,7 +75,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
     <% if (request.getSession().getAttribute("user") != null) { %>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
-        <input type="text" name="message">
+        <input type="text" name="message" id="userInput">
         <br/>
         <button type="submit">Send</button>
     </form>

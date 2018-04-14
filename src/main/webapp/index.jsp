@@ -18,6 +18,9 @@
 <head>
   <title>CodeU Chat App</title>
   <link rel="stylesheet" href="/css/main.css">
+  <script src="js/suggest-box/bounds.js"></script>
+  <script src="js/suggest-box/index.js"></script>
+  <script src="js/emoji-suggest.js"></script>
 </head>
 <body>
 
