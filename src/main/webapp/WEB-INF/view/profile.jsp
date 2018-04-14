@@ -17,10 +17,10 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
-
 <%
-User loggedInUser = UserStore.getUser(request.getSession().getAttribute("user"));
-User profileUser = request.getAttribute("user");
+String about = request.getAttribute("about");
+UUID profileID = UUID.fromString(requestUrl.substring("/profile/".length()));
+UUID userID = request.getSession().getAttribute("user").getID();
 %>
 
 
@@ -44,8 +44,8 @@ User profileUser = request.getAttribute("user");
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
-    <% if(loggedInUser != null){ %>
-      <a>Hello <%= loggedInUser.getName(); %>!</a>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
     <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
@@ -56,22 +56,25 @@ User profileUser = request.getAttribute("user");
   <div id="container">
     <div
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
-
-      <h1><%= profileUser.getName(); %>'s Profile Page</h1>
+      <%
+        String profileName = UserStore.getInstance()
+          .getUser(profileID).getName();
+      %>
+      <h1><%= profileName %>'s Profile Page</h1>
       
       <hr/>
 
       <h2>About</h2>
-        <h1>About <%= profileUser.getName(); %></h1>
-        <p href="aboutDisplay">
-          <%= profileUser.getAbout(); %>
+        <h1>About <%= profileName %></h1>
+        <p>
+          <%= about %>
         </p>
-      <% if(profileUser.getId().equals(loggedInUser.getId());) { %>
+      <% if(profileID.equals(userID)) { %>
         <h3>Edit your About Me (only you can see this)</h3>
 
-          <form action="/profile/ <%= loggedInUser.getId().toString() %>" method="POST">
+          <form action="/profile/ <%= profileID.toString() %>" method="POST">
             <textarea name="editAbout" rows="10"> 
-              <%= loggedInUser.getAbout(); %> 
+              <%= about %> 
             </textarea>
             <br/><br/>
             <input type="submit" value="Submit">

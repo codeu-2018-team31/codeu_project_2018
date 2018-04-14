@@ -1,4 +1,3 @@
-
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,19 +23,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet class responsible for the profile page. */
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/** Servlet class responsible for the profile page.
+    * Provides methods for accessing and editing about information when user requests the /profile URL.
+    */
 public class ProfileServlet extends HttpServlet {
 
 
-/** Store class that gives access to Users. */
+  /** Store class that gives access to Users. */
   private UserStore userStore;
 
-
 /**
-   * Set up state for handling login-related requests. This method is only called when running in a
+   * Set up state for handling profile-related requests. This method is only called when running in a
    * server, not when running in a test.
    */
-@Override
+  @Override
   public void init() throws ServletException {
     super.init();
     setUserStore(UserStore.getInstance());
@@ -50,27 +53,71 @@ public class ProfileServlet extends HttpServlet {
     this.userStore = userStore;
   }
 
+  /**
+   * This function fires when a user requests the /profile URL. It gets the ID of the user of the profile page from
+   * the URL and finds the corresponding about information.
+   * It then forwards to profile.jsp for rendering.
+   */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-      	 String requestUrl = request.getRequestURI();
+
+    String requestUrl = request.getRequestURI();
+    Matcher m = Pattern.compile("^/profile/(.+)").matcher(requestUrl);
+    if (!m.find()) {
+      System.out.println("wrong URL pattern: " + requestUrl);
+      return; // return error 
+    }
+    String extractedId = m.group(1);
+    System.out.println("extracted Id from URL (doGet): " + extractedId);
+    UUID profileId = UUID.fromString(extractedId);
+
+    String username = (String) request.getSession().getAttribute("user");
+    if (username == null) {
+      // User is not logged in, don't let them see a profile
+      System.out.println("Please login before viewing profiles");
+      response.sendRedirect("/login");
+      return;
+    }
+
+    User user = userStore.getUser(profileId);
+    if (user == null) {
+      // Couldn't find user, redirect to conversation list
+      System.out.println("User does not exist: " + profileId);
+      response.sendRedirect("/conversations");
+      return;
+    }
+
+    request.setAttribute("user", user);
     request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
   }
 
-
+  /**
+   * This function fires when a user submits the form on their profile page. It gets the
+   * logged-in user ID from the session and the new about information from the submitted form
+   * data. It uses this to update the user's about information that is displayed on their profile.
+   */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    String username = request.getParameter("username");
-    String password = request.getParameter("password");
-   
+    UUID userId = ((User) request.getSession().getAttribute("user")).getId();
 
+    String requestUrl = request.getRequestURI();
+    Matcher m = Pattern.compile("^/profile/(.+)").matcher(requestUrl);
+    if (!m.find()) {
+      System.out.println("wrong URL pattern: " + requestUrl);
+      return; // return error 
     }
+    String extractedId = m.group(1);
+    System.out.println("extracted Id from URL (doPost): " + extractedId);
+    UUID profileId = UUID.fromString(extractedId);
 
-
-
-
-
-
-
-	}
+    if(userId.equals(profileId)) {
+      // User is viewing their own profile page
+      String about = request.getParameter("editAbout");
+      userStore.getUser(userId).setAbout(about);
+      request.getSession().setAttribute("about", about);
+    }
+    response.sendRedirect("/profile/" + userId.toString());
+  }
+}
