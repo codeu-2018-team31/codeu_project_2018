@@ -35,7 +35,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.io.File;
+import java.io.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -58,7 +58,7 @@ public class ProfileServletTest {
 
   @Before
   public void setup() {
-    profileServlet = new ProfileServlet();
+    profileServlet = new ProfileServlet();  
 
     mockPersistentStorageAgent = Mockito.mock(PersistentStorageAgent.class);
     userStore = UserStore.getTestInstance(mockPersistentStorageAgent);
@@ -79,16 +79,19 @@ public class ProfileServletTest {
 
   @Test
   public void testDoGet() throws IOException, ServletException {
+
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/profile/" + TEST_USER.getId().toString());
   
     Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
+
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter writer = new PrintWriter(stringWriter);
+    Mockito.when(mockResponse.getWriter()).thenReturn(writer);
 
     profileServlet.doGet(mockRequest, mockResponse);
 
     Mockito.verify(mockRequest).setAttribute("user", TEST_USER);
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
-
-    // test HTML page
   }
 
   @Test
@@ -102,7 +105,5 @@ public class ProfileServletTest {
 
     Mockito.verify(mockSession).setAttribute("about", TEST_ABOUT);
     Mockito.verify(mockResponse).sendRedirect("/profile/" + TEST_USER.getId().toString());
-
-    // test HTML page
   }
 }

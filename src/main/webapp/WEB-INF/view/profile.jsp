@@ -13,16 +13,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
-<%@ page import="java.util.List" %>
-<%@ page import="codeu.model.data.Conversation" %>
-<%@ page import="codeu.model.data.Message" %>
-<%@ page import="codeu.model.store.basic.UserStore" %>
-<%
-String about = request.getAttribute("about");
-UUID profileID = UUID.fromString(requestUrl.substring("/profile/".length()));
-UUID userID = request.getSession().getAttribute("user").getID();
-%>
 
+<%@ page import="java.util.List" %>
+<%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.data.User" %>
+
+<%
+String user = (String) request.getSession().getAttribute("user");
+User loggedInUser = UserStore.getInstance().getUser(user);
+User profileUser = (User) request.getAttribute("user");
+%>
 
 <!DOCTYPE html>
 <html>
@@ -40,12 +40,11 @@ UUID userID = request.getSession().getAttribute("user").getID();
 
 </head>
 <body onload="scrollChat()">
-
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
-      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+    <% if(loggedInUser != null){ %>
+      <a>Hello <%= loggedInUser.getName() %>!</a>
     <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
@@ -53,34 +52,35 @@ UUID userID = request.getSession().getAttribute("user").getID();
     <a href="/about.jsp">About</a>
   </nav>
 
-  <div id="container">
-    <div
-      style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
-      <%
-        String profileName = UserStore.getInstance()
-          .getUser(profileID).getName();
-      %>
-      <h1><%= profileName %>'s Profile Page</h1>
-      
+    <div id="container">
+      <div
+        style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
+        
+        <h1><%= profileUser.getName() %>'s Profile Page</h1>
+        
+        <hr/>
+
+        <h2>About</h2>
+          <h1>About <%= profileUser.getName() %></h1>
+          <h6>
+            <%= profileUser.getAbout() %>
+          </h6>
+        
+        <% if(profileUser.getId().equals(loggedInUser.getId())) { %>
+          <h3>Edit your About Me (only you can see this)</h3>
+
+            <form action="/profile/ <%= loggedInUser.getId().toString() %>" method="POST">
+              <textarea name="editAbout" rows="10"> 
+                <%= loggedInUser.getAbout() %> 
+              </textarea>
+              <br/><br/>
+              <input type="submit" value="Submit">
+            </form>
+        <% } %>
+
+      </div>
+
       <hr/>
-
-      <h2>About</h2>
-        <h1>About <%= profileName %></h1>
-        <p>
-          <%= about %>
-        </p>
-      <% if(profileID.equals(userID)) { %>
-        <h3>Edit your About Me (only you can see this)</h3>
-
-          <form action="/profile/ <%= profileID.toString() %>" method="POST">
-            <textarea name="editAbout" rows="10"> 
-              <%= about %> 
-            </textarea>
-            <br/><br/>
-            <input type="submit" value="Submit">
-          </form>
-
-          <hr/>
 
       <h2>Sent Messages</h2>
 
@@ -91,8 +91,6 @@ UUID userID = request.getSession().getAttribute("user").getID();
       </div>
 
       <hr/>
-
-    </div>
   </div>
 </body>
 </html>
