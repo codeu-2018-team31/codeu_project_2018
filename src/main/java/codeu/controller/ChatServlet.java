@@ -20,7 +20,7 @@ import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
-
+import com.vdurmont.emoji.EmojiParser;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
@@ -107,6 +107,9 @@ public class ChatServlet extends HttpServlet {
     UUID conversationId = conversation.getId();
 
     List<Message> messages = messageStore.getMessagesInConversation(conversationId);
+    for (Message message: messages) {
+      System.out.println(message.getContent());
+    }
 
     request.setAttribute("conversation", conversation);
     request.setAttribute("messages", messages);
@@ -152,19 +155,23 @@ public class ChatServlet extends HttpServlet {
     // Remove all but basic styling HTML and img tags from the message content
     Document.OutputSettings settings = new Document.OutputSettings();
     settings.prettyPrint(false);
-    String cleanedMessageContent = Jsoup.clean(messageContent, "",
+    messageContent = Jsoup.clean(messageContent, "",
         Whitelist.basicWithImages(), settings);
 
-    cleanedMessageContent = cleanedMessageContent.replaceAll(
+    // Parse URL
+    messageContent = messageContent.replaceAll(
         "([\\w]+\\:\\/\\/[\\S]+)",
         "<a href=\"$1\">$1</a>");
+
+    // Parse emojis
+    messageContent = EmojiParser.parseToUnicode(messageContent);
 
     Message message =
         new Message(
             UUID.randomUUID(),
             conversation.getId(),
             user.getId(),
-            cleanedMessageContent,
+            messageContent,
             Instant.now());
 
     messageStore.addMessage(message);
