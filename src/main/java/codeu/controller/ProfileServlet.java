@@ -34,6 +34,7 @@ public class ProfileServlet extends HttpServlet {
 
   /** Store class that gives access to Users. */
   private UserStore userStore;
+  private UUID profileId;
 
 /**
    * Set up state for handling profile-related requests. This method is only called when running in a
@@ -69,8 +70,7 @@ public class ProfileServlet extends HttpServlet {
       return; // return error 
     }
     String extractedId = m.group(1);
-    System.out.println("extracted Id from URL (doGet): " + extractedId);
-    UUID profileId = UUID.fromString(extractedId);
+    profileId = UUID.fromString(extractedId);
 
     String username = (String) request.getSession().getAttribute("user");
     if (username == null) {
@@ -100,24 +100,14 @@ public class ProfileServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    UUID userId = ((User) request.getSession().getAttribute("user")).getId();
+    String userName = (String) request.getSession().getAttribute("user");
+    User profileUser = userStore.getUser(userName);
+    UUID userId = profileUser.getId();
+    
+    String about = request.getParameter("editAbout");
+    userStore.getUser(userId).setAbout(about);
+    request.getSession().setAttribute("about", about);
 
-    String requestUrl = request.getRequestURI();
-    Matcher m = Pattern.compile("^/profile/(.+)").matcher(requestUrl);
-    if (!m.find()) {
-      System.out.println("wrong URL pattern: " + requestUrl);
-      return; // return error 
-    }
-    String extractedId = m.group(1);
-    System.out.println("extracted Id from URL (doPost): " + extractedId);
-    UUID profileId = UUID.fromString(extractedId);
-
-    if(userId.equals(profileId)) {
-      // User is viewing their own profile page
-      String about = request.getParameter("editAbout");
-      userStore.getUser(userId).setAbout(about);
-      request.getSession().setAttribute("about", about);
-    }
     response.sendRedirect("/profile/" + userId.toString());
   }
 }

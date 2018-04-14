@@ -98,7 +98,7 @@ public class ProfileServletTest {
   public void testDoPost() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/profile/" + TEST_USER.getId().toString());
 
-    Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USER);
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
     Mockito.when(mockRequest.getParameter("editAbout")).thenReturn(TEST_ABOUT);
 
     profileServlet.doPost(mockRequest, mockResponse);

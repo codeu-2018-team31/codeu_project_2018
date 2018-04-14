@@ -44,7 +44,7 @@ User profileUser = (User) request.getAttribute("user");
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
     <% if(loggedInUser != null){ %>
-      <a>Hello <%= loggedInUser.getName() %>!</a>
+      <a href= <%= "/profile/" + loggedInUser.getId().toString() %> > Hello <%= loggedInUser.getName() %>!</a>
     <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
@@ -60,11 +60,14 @@ User profileUser = (User) request.getAttribute("user");
         
         <hr/>
 
-        <h2>About</h2>
-          <h1>About <%= profileUser.getName() %></h1>
-          <h6>
-            <%= profileUser.getAbout() %>
-          </h6>
+        <h2>About <%= profileUser.getName() %></h2>
+          <% if(loggedInUser.getAbout().isEmpty()) {%>
+             <p> <%= profileUser.getName() %> has not added any information yet! </p>
+          <% } else{ %>
+            <p>
+              <%= profileUser.getAbout() %>
+            </p>
+          <% } %>
         
         <% if(profileUser.getId().equals(loggedInUser.getId())) { %>
           <h3>Edit your About Me (only you can see this)</h3>
