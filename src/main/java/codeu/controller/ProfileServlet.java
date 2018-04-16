@@ -16,6 +16,7 @@ import codeu.model.data.User;
 import codeu.model.data.Message;
 import codeu.model.data.Conversation;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.ConversationStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.UUID;
@@ -47,6 +48,9 @@ public class ProfileServlet extends HttpServlet {
 
   /* Only messages that correspond to a given user ID */
   private List <Message> realMessages;
+
+  /* List of all I.Ds for a given conversation   */
+  private List <UUID>conversationID;
 
 
 /**
@@ -97,7 +101,7 @@ public class ProfileServlet extends HttpServlet {
 
     conversations = ConversationStore.getAllConversations(); //list of conversations
     for(Conversation c : conversations) {
-      conversationID.add(c);  //list of I.Ds
+      conversationID.add(c.getId);  //list of I.Ds
     }
 
    for(UUID id : conversationID) {
