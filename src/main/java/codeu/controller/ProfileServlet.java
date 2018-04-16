@@ -36,14 +36,14 @@ public class ProfileServlet extends HttpServlet {
   private UserStore userStore;
 
   /**All the messages for a given ID */
-  private <Message> messages;
+  private List <Message> messages;
 
 
   /**All the conversations */
-  private <Conversation> conversations;
+  private List <Conversation> conversations;
 
   /* Only messages that correspond to a given user ID */
-  private <Message> realMessages;
+  private List <Message> realMessages;
 
 
 /**
