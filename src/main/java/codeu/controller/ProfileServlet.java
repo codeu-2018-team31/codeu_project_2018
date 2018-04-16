@@ -16,6 +16,7 @@ import codeu.model.data.User;
 import codeu.model.data.Message;
 import codeu.model.data.Conversation;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.ConversationStore;
 import java.io.IOException;
 import java.time.Instant;
@@ -39,6 +40,12 @@ public class ProfileServlet extends HttpServlet {
   /** Store class that gives access to Users. */
   private UserStore userStore;
 
+  /**Store class that gives access to Conversations  */
+  private ConversationStore conversationStore;
+
+  /** Store class that gives access to Messages */
+  private MessageStore messageStore;
+
   /**All the messages for a given ID */
   private List <Message> messages;
 
@@ -61,6 +68,8 @@ public class ProfileServlet extends HttpServlet {
   public void init() throws ServletException {
     super.init();
     setUserStore(UserStore.getInstance());
+    setConversationStore(ConversationStore.getInstance());
+    setMessageStore(MessageStore.getInstance());
   }
   /**
    * Sets the UserStore used by this servlet. This function provides a common setup method for use
@@ -68,6 +77,20 @@ public class ProfileServlet extends HttpServlet {
    */
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
+  }
+  /**
+   * Sets the ConversationStore used by this servlet. This function provides a common setup method for use
+   * by the test framework or the servlet's init() function.
+   */
+  void setConversationStore(ConversationStore conversationStore) {
+    this.conversationStore = conversationStore;
+  }
+  /**
+   * Sets the MessageStore used by this servlet. This function provides a common setup method for use
+   * by the test framework or the servlet's init() function.
+   */
+  void setMessageStore(MessageStore messageStore) {
+    this.messageStore = messageStore;
   }
   /**
    * This function fires when a user requests the /profile URL. It gets the ID of the user of the profile page from
@@ -99,16 +122,16 @@ public class ProfileServlet extends HttpServlet {
 
     User user = userStore.getUser(profileId); 
 
-    conversations = ConversationStore.getAllConversations(); //list of conversations
+    conversations = conversationStore.getAllConversations(); //list of conversations
     for(Conversation c : conversations) {
-      conversationID.add(c.getId);  //list of I.Ds
+      conversationID.add(c.getId());  //list of I.Ds
     }
 
    for(UUID id : conversationID) {
-     messages = MessageStore.getMessagesInConverstion(id);
-     for(Message m:messages) {
-       if(message.getAuthorId.equals(user.getId())) {
-      realMessages.add(m);
+     messages = messageStore.getMessagesInConverstion(id);
+     for(Message message:messages) {
+       if(message.getAuthorId().equals(user.getId())) {
+      realMessages.add(message);
     }
   }
 }
