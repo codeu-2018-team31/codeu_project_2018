@@ -14,6 +14,7 @@ package codeu.controller;
 
 import codeu.model.data.User;
 import codeu.model.data.Message;
+import codeu.model.data.Conversation;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
@@ -22,6 +23,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
