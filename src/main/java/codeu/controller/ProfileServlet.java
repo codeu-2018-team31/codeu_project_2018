@@ -128,7 +128,7 @@ public class ProfileServlet extends HttpServlet {
     }
 
    for(UUID id : conversationID) {
-     messages = messageStore.getMessagesInConverstion(id);
+     messages = messageStore.getMessagesInConversation(id);
      for(Message message:messages) {
        if(message.getAuthorId().equals(user.getId())) {
       realMessages.add(message);
