@@ -27,6 +27,11 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 <head>
   <title><%= conversation.getTitle() %></title>
   <link rel="stylesheet" href="/css/main.css" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/js/emoji.min.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.emoji.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/js/textcomplete.min.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/js/emoji-suggest.js"></script>
 
   <script>
     // scroll the chat div to the bottom
@@ -75,7 +80,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
     <% if (request.getSession().getAttribute("user") != null) { %>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
-        <input type="text" name="message" id="userInput">
+        <textarea name="message" id="userInput"></textarea>
         <br/>
         <button type="submit">Send</button>
     </form>
