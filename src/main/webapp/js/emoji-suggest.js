@@ -32,7 +32,7 @@ $(document).ready(() => {
       console.log(emoji.replace_colons(short_name));
 
       // Replace the matched phrase with the clicked suggestion's emoji
-      return emoji.replace_colons(short_name) + " ";
+      return " " + emoji.replace_colons(short_name) + " ";
     }
   }]);
 });
