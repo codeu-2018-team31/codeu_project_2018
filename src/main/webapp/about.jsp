@@ -14,6 +14,7 @@
   limitations under the License.
 --%>
 <!DOCTYPE html>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
   <title>CodeU Chat App</title>
@@ -40,9 +41,9 @@
 
       <h1>About the CodeU Chat App</h1>
       <p>
-        This is a Chat App created by Spring 2018 CodeU Team 31! 
-        We are a group of college students from around the East Coast: Ellen, Joyce, Pete, and Ransford. 
-        Oh, and we have an awesome PA, Will! 
+        This is a Chat App created by Spring 2018 CodeU Team 31!
+        We are a group of college students from around the East Coast: Ellen, Joyce, Pete, and Ransford.
+        Oh, and we have an awesome PA, Will!
         Stay tuned to see this Chat App get more come to life over the semester!
       </p>
       <p>
