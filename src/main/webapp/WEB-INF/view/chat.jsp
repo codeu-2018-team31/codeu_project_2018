@@ -81,7 +81,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
     <% if (request.getSession().getAttribute("user") != null) { %>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
-        <textarea name="message" id="userInput"></textarea>
+        <input name="message" id="userInput"></textarea>
         <br/>
         <button type="submit">Send</button>
     </form>
