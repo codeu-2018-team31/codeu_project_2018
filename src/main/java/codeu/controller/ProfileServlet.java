@@ -105,7 +105,9 @@ public class ProfileServlet extends HttpServlet {
     UUID userId = profileUser.getId();
     
     String about = request.getParameter("editAbout");
-    userStore.getUser(userId).setAbout(about);
+    User user = userStore.getUser(userId);
+    user.setAbout(about);
+    userStore.putUser(user);
     request.getSession().setAttribute("about", about);
 
     response.sendRedirect("/profile/" + userId.toString());
