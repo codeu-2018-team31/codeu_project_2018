@@ -52,22 +52,21 @@ User profileUser = (User) request.getAttribute("user");
     <a href="/about.jsp">About</a>
   </nav>
 
-    <div id="container">
-      <div
-        style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
+  <div id="container">
+    <div style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
         
-        <h1><%= profileUser.getName() %>'s Profile Page</h1>
+      <h1><%= profileUser.getName() %>'s Profile Page</h1>
         
-        <hr/>
+      <hr/>
 
-        <h2>About <%= profileUser.getName() %></h2>
-          <% if(loggedInUser.getAbout().isEmpty()) {%>
-             <p> <%= profileUser.getName() %> has not added any information yet! </p>
+      <h2>About <%= profileUser.getName() %></h2>
+        <% if(loggedInUser.getAbout().isEmpty()) {%>
+            <p> <%= profileUser.getName() %> has not added any information yet! </p>
           <% } else{ %>
             <p>
               <%= profileUser.getAbout() %>
             </p>
-          <% } %>
+        <% } %>
         
         <% if(profileUser.getId().equals(loggedInUser.getId())) { %>
           <h3>Edit your About Me (only you can see this)</h3>
@@ -81,8 +80,6 @@ User profileUser = (User) request.getAttribute("user");
             </form>
         <% } %>
 
-      </div>
-
       <hr/>
 
       <h2>Sent Messages</h2>
@@ -94,6 +91,7 @@ User profileUser = (User) request.getAttribute("user");
       </div>
 
       <hr/>
+    </div>
   </div>
 </body>
 </html>
