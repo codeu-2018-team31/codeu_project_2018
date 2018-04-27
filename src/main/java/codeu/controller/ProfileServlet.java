@@ -56,9 +56,6 @@ public class ProfileServlet extends HttpServlet {
   /* Only messages that correspond to a given user ID */
   private List <Message> realMessages;
 
-  /* List of all I.Ds for a given conversation   */
-  private List <UUID>conversationID;
-
 
 /**
    * Set up state for handling profile-related requests. This method is only called when running in a
@@ -110,8 +107,6 @@ public class ProfileServlet extends HttpServlet {
     String extractedId = m.group(1);
     System.out.println("extracted Id from URL (doGet): " + extractedId);
     UUID profileId = UUID.fromString(extractedId);
-
-
     String username = (String) request.getSession().getAttribute("user");
     if (username == null) {
       // User is not logged in, don't let them see a profile
@@ -124,17 +119,13 @@ public class ProfileServlet extends HttpServlet {
 
     conversations = conversationStore.getAllConversations(); //list of conversations
     for(Conversation c : conversations) {
-      conversationID.add(c.getId());  //list of I.Ds
+      messages = messageStore.getMessagesInConversation(c.getId());
     }
-
-   for(UUID id : conversationID) {
-     messages = messageStore.getMessagesInConversation(id);
      for(Message message:messages) {
        if(message.getAuthorId().equals(user.getId())) {
       realMessages.add(message);
     }
   }
-}
 
     if (user == null) {
       // Couldn't find user, redirect to conversation list
