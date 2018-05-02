@@ -13,6 +13,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<%@ page import="java.util.List" %>
+<%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.data.User" %>
+
+<%
+String user = (String) request.getSession().getAttribute("user");
+User loggedInUser = UserStore.getInstance().getUser(user);
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,8 +35,8 @@
     <a href="/conversations">Conversations</a>
     <a href="/about.jsp">About</a>
     <a href="/testdata">Load Test Data</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
-      <a >Hello <%= request.getSession().getAttribute("user") %>!</a>
+    <% if(loggedInUser != null){ %>
+      <a href= <%= "/profile/" + loggedInUser.getId().toString() %> > Hello <%= loggedInUser.getName() %>!</a>
     <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>

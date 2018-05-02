@@ -44,8 +44,8 @@ User profileUser = (User) request.getAttribute("user");
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
     <a href="/about.jsp">About</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
-      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+    <% if(loggedInUser != null){ %>
+      <a href= <%= "/profile/" + loggedInUser.getId().toString() %> > Hello <%= loggedInUser.getName() %>!</a>
     <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
