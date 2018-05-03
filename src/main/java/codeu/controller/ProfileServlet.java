@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-//
-=======
->>>>>>> 55f2d4dd4baa00481ce0f18f592d9bdef93c2085
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
