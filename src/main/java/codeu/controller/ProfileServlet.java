@@ -105,7 +105,7 @@ public class ProfileServlet extends HttpServlet {
     Matcher m = Pattern.compile("^/profile/(.+)").matcher(requestUrl);
     if (!m.find()) {
       System.out.println("wrong URL pattern: " + requestUrl);
-      return; // return error 
+      return; // return error
     }
     String extractedId = m.group(1);
 
@@ -119,17 +119,21 @@ public class ProfileServlet extends HttpServlet {
       return;
     }
 
-    User user = userStore.getUser(profileId); 
+    User user = userStore.getUser(profileId);
 
-    conversations = conversationStore.getAllConversations(); //list of conversations
-    for(Conversation c : conversations) {
-      messages = messageStore.getMessagesInConversation(c.getId());
+    if (conversationStore != null) {
+      conversations = conversationStore.getAllConversations(); //list of conversations
+      for(Conversation c : conversations) {
+        messages = messageStore.getMessagesInConversation(c.getId());
+      }
+      if (messages != null) {
+        for(Message message:messages) {
+          if(message.getAuthorId().equals(user.getId())) {
+             realMessages.add(message);
+           }
+         }
+      }
     }
-     for(Message message:messages) {
-       if(message.getAuthorId().equals(user.getId())) {
-      realMessages.add(message);
-    }
-  }
 
     if (user == null) {
       // Couldn't find user, redirect to conversation list
@@ -157,7 +161,7 @@ public class ProfileServlet extends HttpServlet {
     Matcher m = Pattern.compile("^/profile/(.+)").matcher(requestUrl);
     if (!m.find()) {
       System.out.println("wrong URL pattern: " + requestUrl);
-      return; // return error 
+      return; // return error
     }
     String extractedId = m.group(1);
     System.out.println("extracted Id from URL (doPost): " + extractedId);
