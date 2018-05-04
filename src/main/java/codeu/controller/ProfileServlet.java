@@ -12,12 +12,12 @@
 
 package codeu.controller;
 
-import codeu.model.data.User;
 import codeu.model.data.Message;
 import codeu.model.data.Conversation;
-import codeu.model.store.basic.UserStore;
-import codeu.model.store.basic.MessageStore;
+import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.UUID;
@@ -40,23 +40,23 @@ public class ProfileServlet extends HttpServlet {
   /** Store class that gives access to Users. */
   private UserStore userStore;
 
+  /** Id of current profile's user */
   private UUID profileId;
 
-  /**Store class that gives access to Conversations  */
+  /** Store class that gives access to Conversations  */
   private ConversationStore conversationStore;
 
   /** Store class that gives access to Messages */
   private MessageStore messageStore;
 
-  /**All the messages for a given ID */
+  /** All the messages for a given ID */
   private List <Message> messages;
 
-
-  /**All the conversations */
+  /** All the conversations */
   private List <Conversation> conversations;
 
   /* Only messages that correspond to a given user ID */
-  private List <Message> realMessages;
+  private List <Message> realMessages = new ArrayList<>();
 
 /**
    * Set up state for handling profile-related requests. This method is only called when running in a
@@ -121,15 +121,15 @@ public class ProfileServlet extends HttpServlet {
 
     User user = userStore.getUser(profileId); 
 
-    conversations = conversationStore.getAllConversations(); //list of conversations
+    conversations = conversationStore.getAllConversations(); // List of all conversations
     for(Conversation c : conversations) {
       messages = messageStore.getMessagesInConversation(c.getId());
+      for(Message message : messages) {
+        if(message.getAuthorId().equals(user.getId())) {
+          realMessages.add(message);
+        }
+      }
     }
-     for(Message message:messages) {
-       if(message.getAuthorId().equals(user.getId())) {
-      realMessages.add(message);
-    }
-  }
 
     if (user == null) {
       // Couldn't find user, redirect to conversation list
@@ -150,8 +150,8 @@ public class ProfileServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-
-    UUID userId = ((User) request.getSession().getAttribute("user")).getId();
+    String username = (String) request.getSession().getAttribute("user");
+    UUID userId = ((User) userStore.getUser(username)).getId();
 
     String requestUrl = request.getRequestURI();
     Matcher m = Pattern.compile("^/profile/(.+)").matcher(requestUrl);

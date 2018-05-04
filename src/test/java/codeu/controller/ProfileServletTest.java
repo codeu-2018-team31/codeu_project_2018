@@ -14,13 +14,19 @@
 
 package codeu.controller;
 
+import codeu.model.data.Conversation;
+import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.persistence.PersistentStorageAgent;
 
 import java.io.IOException;
 import java.time.Instant;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -49,12 +55,20 @@ public class ProfileServletTest {
   private RequestDispatcher mockRequestDispatcher;
   private HttpSession mockSession;
   private UserStore userStore;
+  private ConversationStore conversationStore;
+  private MessageStore messageStore;
   private PersistentStorageAgent mockPersistentStorageAgent;
 
   static final String TEST_USERNAME = "test username";
   static final String TEST_PASSWORD = "test password";
   static final String TEST_ABOUT = "test about";
-  static final User TEST_USER = new User(UUID.randomUUID(), TEST_USERNAME, Instant.now(), TEST_PASSWORD, TEST_ABOUT);
+  static final String TEST_TITLE = "test title";
+  static final UUID TEST_USER_ID = UUID.randomUUID();
+  static final UUID TEST_CONVO_ID = UUID.randomUUID();
+  static final User TEST_USER = new User(TEST_USER_ID, TEST_USERNAME, Instant.now(), TEST_PASSWORD, TEST_ABOUT);
+  static final Conversation TEST_CONVO = new Conversation(TEST_CONVO_ID, TEST_USER_ID, TEST_TITLE, Instant.now());
+  static final Message TEST_MESSAGE = new Message(UUID.randomUUID(), TEST_CONVO_ID, TEST_USER_ID, TEST_ABOUT, Instant.now());
+
 
   @Before
   public void setup() {
@@ -62,6 +76,8 @@ public class ProfileServletTest {
 
     mockPersistentStorageAgent = Mockito.mock(PersistentStorageAgent.class);
     userStore = UserStore.getTestInstance(mockPersistentStorageAgent);
+    conversationStore = ConversationStore.getTestInstance(mockPersistentStorageAgent);
+    messageStore = MessageStore.getTestInstance(mockPersistentStorageAgent);
 
     mockRequest = Mockito.mock(HttpServletRequest.class);
     mockSession = Mockito.mock(HttpSession.class);
@@ -73,8 +89,12 @@ public class ProfileServletTest {
         .thenReturn(mockRequestDispatcher);
 
     profileServlet.setUserStore(userStore);
+    profileServlet.setConversationStore(conversationStore);
+    profileServlet.setMessageStore(messageStore);
 
     userStore.addUser(TEST_USER);
+    conversationStore.addConversation(TEST_CONVO);
+    messageStore.addMessage(TEST_MESSAGE);
   }
 
   @Test
@@ -88,9 +108,13 @@ public class ProfileServletTest {
     PrintWriter writer = new PrintWriter(stringWriter);
     Mockito.when(mockResponse.getWriter()).thenReturn(writer);
 
+    List<Message> messages = new ArrayList<>();
+    messages.add(TEST_MESSAGE); 
+
     profileServlet.doGet(mockRequest, mockResponse);
 
     Mockito.verify(mockRequest).setAttribute("user", TEST_USER);
+    Mockito.verify(mockRequest).setAttribute("messages", messages);
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
 
