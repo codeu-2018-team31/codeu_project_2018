@@ -18,6 +18,7 @@ import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.persistence.PersistentStorageAgent;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.UUID;
@@ -152,7 +153,8 @@ public class ProfileServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     String username = (String) request.getSession().getAttribute("user");
-    UUID userId = ((User) userStore.getUser(username)).getId();
+    User user = (User) userStore.getUser(username);
+    UUID userId = user.getId();
 
     String requestUrl = request.getRequestURI();
     Matcher m = Pattern.compile("^/profile/(.+)").matcher(requestUrl);
@@ -167,9 +169,11 @@ public class ProfileServlet extends HttpServlet {
     if(userId.equals(profileId)) {
       // User is viewing their own profile page
       String about = request.getParameter("editAbout");
-      userStore.getUser(userId).setAbout(about);
+      user.setAbout(about);
+      userStore.putUser(user);
       request.getSession().setAttribute("about", about);
     }
+
     String url = "/profile/" + userId.toString();
     response.sendRedirect(url);
   } 
