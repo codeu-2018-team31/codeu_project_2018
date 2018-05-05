@@ -57,9 +57,6 @@ public class ProfileServlet extends HttpServlet {
   /** All the conversations */
   private List <Conversation> conversations;
 
-  /* Only messages that correspond to a given user ID */
-  private List <Message> realMessages = new ArrayList<>();
-
 /**
    * Set up state for handling profile-related requests. This method is only called when running in a
    * server, not when running in a test.
@@ -122,6 +119,7 @@ public class ProfileServlet extends HttpServlet {
     }
 
     User user = userStore.getUser(profileId); 
+    List <Message> realMessages = new ArrayList<>(); // List of messages sent by user
 
     conversations = conversationStore.getAllConversations(); // List of all conversations
     for(Conversation c : conversations) {
