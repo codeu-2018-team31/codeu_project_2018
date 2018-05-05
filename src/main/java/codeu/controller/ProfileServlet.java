@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URLEncoder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -169,7 +170,7 @@ public class ProfileServlet extends HttpServlet {
       userStore.getUser(userId).setAbout(about);
       request.getSession().setAttribute("about", about);
     }
-
-    response.sendRedirect("/profile/" + userId.toString());
-  }
+    String url = "/profile/" + userId.toString();
+    response.sendRedirect(url);
+  } 
 }
