@@ -14,8 +14,15 @@
   limitations under the License.
 --%>
 
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.format.FormatStyle" %>
+<%@ page import="java.time.Instant" %>
+<%@ page import="java.time.ZoneId" %>
+
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Locale" %>
+
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.data.User" %>
@@ -25,6 +32,10 @@ String user = (String) request.getSession().getAttribute("user");
 User loggedInUser = UserStore.getInstance().getUser(user);
 User profileUser = (User) request.getAttribute("user");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+DateTimeFormatter formatter =
+    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+                     .withLocale(Locale.US)
+                     .withZone(ZoneId.systemDefault());
 %>
 
 <!DOCTYPE html>
@@ -92,7 +103,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
           <%
           for(Message m : messages){
           %>
-            <li><strong>Timestamp: </strong><%= m.getContent() %></li>
+            <li><strong><%= formatter.format(m.getCreationTime()) %>: </strong><%= m.getContent() %></li>
           <%
           }
           %>
