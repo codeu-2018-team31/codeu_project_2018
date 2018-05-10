@@ -67,8 +67,10 @@ User loggedInUser = UserStore.getInstance().getUser(user);
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
+        String id = UserStore.getInstance()
+          .getUser(message.getAuthorId()).getId().toString();
     %>
-      <li><strong><%= author %>:</strong> <%= message.getContent() %></li>
+      <li><strong><a href="/profile/<%= id %>"><%= author %></a>:</strong> <%= message.getContent() %></li>
     <%
       }
     %>
