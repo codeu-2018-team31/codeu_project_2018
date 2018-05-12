@@ -60,26 +60,27 @@ User profileUser = (User) request.getAttribute("user");
       <hr/>
 
       <h2>About <%= profileUser.getName() %></h2>
-        <% if(loggedInUser.getAbout().isEmpty()) {%>
-            <p> <%= profileUser.getName() %> has not added any information yet! </p>
-          <% } else{ %>
-            <p>
-              <%= profileUser.getAbout() %>
-            </p>
-        <% } %>
-        
-        <% if(profileUser.getId().equals(loggedInUser.getId())) { %>
-          <h3>Edit your About Me (only you can see this)</h3>
+        <% if (loggedInUser != null && profileUser != null) {%>
+          <% if (loggedInUser.getAbout().isEmpty()) {%>
+              <p> <%= profileUser.getName() %> has not added any information yet! </p>
+            <% } else{ %>
+              <p>
+                <%= profileUser.getAbout() %>
+              </p>
+          <% } %>
+          
+          <% if(profileUser.getId().equals(loggedInUser.getId())) { %>
+            <h3>Edit your About Me</h3>
 
-            <form action="/profile/ <%= loggedInUser.getId().toString() %>" method="POST">
-              <textarea name="editAbout" rows="10"> 
-                <%= loggedInUser.getAbout() %> 
-              </textarea>
-              <br/><br/>
-              <input type="submit" value="Submit">
-            </form>
+              <form action="/profile/ <%= loggedInUser.getId().toString() %>" method="POST">
+                <textarea name="editAbout" rows="10"> 
+                  <%= loggedInUser.getAbout() %> 
+                </textarea>
+                <br/><br/>
+                <input type="submit" value="Submit">
+              </form>
+          <% } %>
         <% } %>
-
       <hr/>
 
       <h2>Sent Messages</h2>

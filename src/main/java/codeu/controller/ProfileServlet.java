@@ -32,8 +32,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** Servlet class responsible for the profile page.
-    * Provides methods for accessing and editing about information when user requests the /profile URL.
-    */
+  * Provides methods for accessing and editing about information when user requests the /profile URL.
+  */
 public class ProfileServlet extends HttpServlet {
 
 
@@ -55,7 +55,7 @@ public class ProfileServlet extends HttpServlet {
   /** All the conversations */
   private List <Conversation> conversations;
 
-  /* Only messages that correspond to a given user ID */
+  /** Only messages that correspond to a given user ID */
   private List <Message> realMessages = new ArrayList<>();
 
 /**
@@ -122,10 +122,10 @@ public class ProfileServlet extends HttpServlet {
     User user = userStore.getUser(profileId); 
 
     conversations = conversationStore.getAllConversations(); // List of all conversations
-    for(Conversation c : conversations) {
+    for (Conversation c : conversations) {
       messages = messageStore.getMessagesInConversation(c.getId());
-      for(Message message : messages) {
-        if(message.getAuthorId().equals(user.getId())) {
+      for (Message message : messages) {
+        if (message.getAuthorId().equals(user.getId())) {
           realMessages.add(message);
         }
       }
@@ -163,7 +163,7 @@ public class ProfileServlet extends HttpServlet {
     System.out.println("extracted Id from URL (doPost): " + extractedId);
     UUID profileId = UUID.fromString(extractedId);
 
-    if(userId.equals(profileId)) {
+    if (userId.equals(profileId)) {
       // User is viewing their own profile page
       String about = request.getParameter("editAbout");
       userStore.getUser(userId).setAbout(about);
