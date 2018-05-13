@@ -20,3 +20,4 @@ public class TagTest {
     Assert.assertEquals(creation, test_tag.getCreationTime());
   }
 }
+
