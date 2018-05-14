@@ -29,9 +29,9 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
   <title><%= conversation.getTitle() %></title>
   <link rel="stylesheet" href="/css/main.css" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/js/emoji.min.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/emoji-js/lib/emoji.js"></script>
   <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.emoji.js"></script>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/js/textcomplete.min.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/textcomplete/src/textcomplete.js"></script>
   <script type="text/javascript" src="${pageContext.request.contextPath}/js/emoji-suggest.js"></script>
 
   <script>
