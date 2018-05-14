@@ -104,6 +104,9 @@ public class UserStore {
     persistentStorageAgent.writeThrough(user);
   }
 
+  /** Writes through the current set of users known to the application. 
+    * To be called when updating a user's attribute.  
+    */
   public void putUser(User user) {
     persistentStorageAgent.writeThrough(user);
   }
