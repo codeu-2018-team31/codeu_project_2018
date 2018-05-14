@@ -17,9 +17,13 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.data.User" %>
+
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+String user = (String) request.getSession().getAttribute("user");
+User loggedInUser = UserStore.getInstance().getUser(user);
 %>
 
 <!DOCTYPE html>
@@ -41,13 +45,13 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
-      <% if (request.getSession().getAttribute("user") != null) { %>
-    <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
-    <% } else { %>
+    <a href="/about.jsp">About</a>
+    <% if(loggedInUser != null){ %>
+      <a href= <%= "/profile/" + loggedInUser.getId().toString() %> > Hello <%= loggedInUser.getName() %>!</a>
+    <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
     <% } %>
-    <a href="/about.jsp">About</a>
   </nav>
 
   <div id="container">
@@ -63,8 +67,10 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
+        String id = UserStore.getInstance()
+          .getUser(message.getAuthorId()).getId().toString();
     %>
-      <li><strong><%= author %>:</strong> <%= message.getContent() %></li>
+      <li><strong><a href="/profile/<%= id %>"><%= author %></a>:</strong> <%= message.getContent() %></li>
     <%
       }
     %>

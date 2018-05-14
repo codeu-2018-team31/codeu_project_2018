@@ -15,6 +15,13 @@
 --%>
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
+<%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.data.User" %>
+
+<%
+String user = (String) request.getSession().getAttribute("user");
+User loggedInUser = UserStore.getInstance().getUser(user);
+%>
 
 <!DOCTYPE html>
 <html>
@@ -27,13 +34,13 @@
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
-      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+    <a href="/about.jsp">About</a>
+    <% if(loggedInUser != null){ %>
+      <a href= <%= "/profile/" + loggedInUser.getId().toString() %> > Hello <%= loggedInUser.getName() %>!</a>
     <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
     <% } %>
-    <a href="/about.jsp">About</a>
   </nav>
 
   <div id="container">
