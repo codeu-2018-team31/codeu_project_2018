@@ -18,6 +18,7 @@ import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.persistence.PersistentStorageAgent;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.UUID;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URLEncoder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,7 +37,6 @@ import java.util.regex.Pattern;
   * Provides methods for accessing and editing about information when user requests the /profile URL.
   */
 public class ProfileServlet extends HttpServlet {
-
 
   /** Store class that gives access to Users. */
   private UserStore userStore;
@@ -120,6 +121,7 @@ public class ProfileServlet extends HttpServlet {
     }
 
     User user = userStore.getUser(profileId); 
+    List <Message> realMessages = new ArrayList<>(); // List of messages sent by user
 
     conversations = conversationStore.getAllConversations(); // List of all conversations
     for (Conversation c : conversations) {
@@ -151,7 +153,8 @@ public class ProfileServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     String username = (String) request.getSession().getAttribute("user");
-    UUID userId = ((User) userStore.getUser(username)).getId();
+    User user = (User) userStore.getUser(username);
+    UUID userId = user.getId();
 
     String requestUrl = request.getRequestURI();
     Matcher m = Pattern.compile("^/profile/(.+)").matcher(requestUrl);
@@ -166,10 +169,12 @@ public class ProfileServlet extends HttpServlet {
     if (userId.equals(profileId)) {
       // User is viewing their own profile page
       String about = request.getParameter("editAbout");
-      userStore.getUser(userId).setAbout(about);
+      user.setAbout(about);
+      userStore.putUser(user);
       request.getSession().setAttribute("about", about);
     }
 
-    response.sendRedirect("/profile/" + userId.toString());
-  }
+    String url = "/profile/" + userId.toString();
+    response.sendRedirect(url);
+  } 
 }

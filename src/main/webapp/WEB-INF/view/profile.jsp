@@ -14,14 +14,28 @@
   limitations under the License.
 --%>
 
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.format.FormatStyle" %>
+<%@ page import="java.time.Instant" %>
+<%@ page import="java.time.ZoneId" %>
+
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Locale" %>
+
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.data.User" %>
 
 <%
 String user = (String) request.getSession().getAttribute("user");
 User loggedInUser = UserStore.getInstance().getUser(user);
 User profileUser = (User) request.getAttribute("user");
+List<Message> messages = (List<Message>) request.getAttribute("messages");
+DateTimeFormatter formatter =
+    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+                     .withLocale(Locale.US)
+                     .withZone(ZoneId.systemDefault());
 %>
 
 <!DOCTYPE html>
@@ -71,23 +85,28 @@ User profileUser = (User) request.getAttribute("user");
           
           <% if(profileUser.getId().equals(loggedInUser.getId())) { %>
             <h3>Edit your About Me</h3>
-
-              <form action="/profile/ <%= loggedInUser.getId().toString() %>" method="POST">
-                <textarea name="editAbout" rows="10"> 
-                  <%= loggedInUser.getAbout() %> 
-                </textarea>
-                <br/><br/>
-                <input type="submit" value="Submit">
-              </form>
-          <% } %>
+      
+            <form action="/profile/<%= loggedInUser.getId().toString() %>" method="POST">
+              <textarea name="editAbout" rows="10" tabindex="6" maxlength="1500"> 
+                <%= loggedInUser.getAbout() %> 
+              </textarea>
+              <br/><br/>
+              <input type="submit" value="Submit">
+            </form>
         <% } %>
       <hr/>
 
       <h2>Sent Messages</h2>
 
       <div id="chat">
-        <ul>
-          <li><strong>Timestamp:</strong> your message</li>
+        <ul> 
+          <%
+          for(Message m : messages){
+          %>
+            <li><strong><%= formatter.format(m.getCreationTime()) %>: </strong><%= m.getContent() %></li>
+          <%
+          }
+          %>
         </ul>
       </div>
 
