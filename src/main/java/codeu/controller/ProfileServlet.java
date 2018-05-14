@@ -12,12 +12,13 @@
 
 package codeu.controller;
 
-import codeu.model.data.User;
 import codeu.model.data.Message;
 import codeu.model.data.Conversation;
-import codeu.model.store.basic.UserStore;
-import codeu.model.store.basic.MessageStore;
+import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
+import codeu.model.store.persistence.PersistentStorageAgent;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.UUID;
@@ -27,35 +28,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URLEncoder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** Servlet class responsible for the profile page.
-    * Provides methods for accessing and editing about information when user requests the /profile URL.
-    */
+  * Provides methods for accessing and editing about information when user requests the /profile URL.
+  */
 public class ProfileServlet extends HttpServlet {
-
 
   /** Store class that gives access to Users. */
   private UserStore userStore;
 
-  /**Store class that gives access to Conversations  */
+  /** Id of current profile's user */
+  private UUID profileId;
+
+  /** Store class that gives access to Conversations  */
   private ConversationStore conversationStore;
 
   /** Store class that gives access to Messages */
   private MessageStore messageStore;
 
-  /**All the messages for a given ID */
+  /** All the messages for a given ID */
   private List <Message> messages;
 
-
-  /**All the conversations */
+  /** All the conversations */
   private List <Conversation> conversations;
 
-  /* Only messages that correspond to a given user ID */
-  private List <Message> realMessages;
-
+  /** Only messages that correspond to a given user ID */
+  private List <Message> realMessages = new ArrayList<>();
 
 /**
    * Set up state for handling profile-related requests. This method is only called when running in a
@@ -75,6 +77,7 @@ public class ProfileServlet extends HttpServlet {
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
   }
+
   /**
    * Sets the ConversationStore used by this servlet. This function provides a common setup method for use
    * by the test framework or the servlet's init() function.
@@ -89,6 +92,7 @@ public class ProfileServlet extends HttpServlet {
   void setMessageStore(MessageStore messageStore) {
     this.messageStore = messageStore;
   }
+
   /**
    * This function fires when a user requests the /profile URL. It gets the ID of the user of the profile page from
    * the URL and finds the corresponding about information.
@@ -105,8 +109,9 @@ public class ProfileServlet extends HttpServlet {
       return; // return error 
     }
     String extractedId = m.group(1);
-    System.out.println("extracted Id from URL (doGet): " + extractedId);
-    UUID profileId = UUID.fromString(extractedId);
+
+    profileId = UUID.fromString(extractedId);
+
     String username = (String) request.getSession().getAttribute("user");
     if (username == null) {
       // User is not logged in, don't let them see a profile
@@ -116,16 +121,17 @@ public class ProfileServlet extends HttpServlet {
     }
 
     User user = userStore.getUser(profileId); 
+    List <Message> realMessages = new ArrayList<>(); // List of messages sent by user
 
-    conversations = conversationStore.getAllConversations(); //list of conversations
-    for(Conversation c : conversations) {
+    conversations = conversationStore.getAllConversations(); // List of all conversations
+    for (Conversation c : conversations) {
       messages = messageStore.getMessagesInConversation(c.getId());
+      for (Message message : messages) {
+        if (message.getAuthorId().equals(user.getId())) {
+          realMessages.add(message);
+        }
+      }
     }
-     for(Message message:messages) {
-       if(message.getAuthorId().equals(user.getId())) {
-      realMessages.add(message);
-    }
-  }
 
     if (user == null) {
       // Couldn't find user, redirect to conversation list
@@ -146,7 +152,9 @@ public class ProfileServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    UUID userId = ((User) request.getSession().getAttribute("user")).getId();
+    String username = (String) request.getSession().getAttribute("user");
+    User user = (User) userStore.getUser(username);
+    UUID userId = user.getId();
 
     String requestUrl = request.getRequestURI();
     Matcher m = Pattern.compile("^/profile/(.+)").matcher(requestUrl);
@@ -158,12 +166,15 @@ public class ProfileServlet extends HttpServlet {
     System.out.println("extracted Id from URL (doPost): " + extractedId);
     UUID profileId = UUID.fromString(extractedId);
 
-    if(userId.equals(profileId)) {
+    if (userId.equals(profileId)) {
       // User is viewing their own profile page
       String about = request.getParameter("editAbout");
-      userStore.getUser(userId).setAbout(about);
+      user.setAbout(about);
+      userStore.putUser(user);
       request.getSession().setAttribute("about", about);
     }
-    response.sendRedirect("/profile/" + userId.toString());
-  }
+
+    String url = "/profile/" + userId.toString();
+    response.sendRedirect(url);
+  } 
 }
