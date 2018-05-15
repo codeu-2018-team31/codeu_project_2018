@@ -36,5 +36,21 @@ public class Tag {
   public Instant getCreationTime() {
     return creation;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Tag)) {
+      return false;
+    }
+
+    Tag other = (Tag) o;
+    if (other.getTag().equals(tag)) {
+      return true;
+    }
+    return false;
+  }
 }
 
