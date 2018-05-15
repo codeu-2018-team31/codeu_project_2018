@@ -74,10 +74,10 @@ DateTimeFormatter formatter =
       <hr/>
 
       <h2>About <%= profileUser.getName() %></h2>
-        <% if (loggedInUser != null && profileUser != null) {%>
-          <% if (loggedInUser.getAbout().isEmpty()) {%>
+        <% if (loggedInUser != null && profileUser != null) { %>
+          <% if (loggedInUser.getAbout().isEmpty()) { %>
               <p> <%= profileUser.getName() %> has not added any information yet! </p>
-            <% } else{ %>
+            <% } else { %>
               <p>
                 <%= profileUser.getAbout() %>
               </p>
@@ -94,6 +94,7 @@ DateTimeFormatter formatter =
               <input type="submit" value="Submit">
             </form>
         <% } %>
+      <% } %> 
       <hr/>
 
       <h2>Sent Messages</h2>
