@@ -57,8 +57,8 @@ User loggedInUser = UserStore.getInstance().getUser(user);
           <input type="text" name="conversationTitle">
         </div>
         <div class="form-group">
-          <label class="form-control-label">Tags:</label>
-          <input type="text" name="tags" placeholder="Comma-separated tags">
+          <label class="form-control-label">Tags (Optional):</label>
+          <input type="text" name="tags" placeholder="Comma-separated tags" width="200px">
         </div>
 
         <button type="submit">Create</button>

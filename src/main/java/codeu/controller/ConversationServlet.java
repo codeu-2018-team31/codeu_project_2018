@@ -121,17 +121,19 @@ public class ConversationServlet extends HttpServlet {
 
     // Get all tags
     String tags = request.getParameter("tags");
-    if (!tags.matches("[\\w*,*\\s*]*")) {
-      request.setAttribute("error", "Please enter tags as comma-separated words that only contain letters and numbers.");
-      request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
-      return;
-    }
-    
-    // Add all tags to the user's tagged conversations Map
-    List<String> splitTags = Arrays.asList(tags.split(",*\\s*"));
-    for (String tag : splitTags) {
-      Tag newTag = new Tag(UUID.randomUUID(), tag, Instant.now());
-      user.addTaggedConversation(newTag, conversation);
+    if (tags != null) {
+      if (!tags.matches("([\\w*](, ))*[\\w*]")) {
+        request.setAttribute("error", "Please enter tags as comma-separated words with one space between them. Tags can only contain letters and numbers.");
+        request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+        return;
+      }
+
+      // Add all tags to the user's tagged conversations Map
+      List<String> splitTags = Arrays.asList(tags.split(", "));
+      for (String tag : splitTags) {
+        Tag newTag = new Tag(UUID.randomUUID(), tag, Instant.now());
+        user.addTaggedConversation(newTag, conversation);
+      }
     }
 
     conversationStore.addConversation(conversation);
