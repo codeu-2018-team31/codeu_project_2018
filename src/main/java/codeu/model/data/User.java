@@ -15,6 +15,11 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /** Class representing a registered user. */
@@ -24,6 +29,8 @@ public class User {
   private final Instant creation;
   private final String hashedPassword;
   private String about;
+  private Map<Tag, Set<Conversation>> taggedConversations;
+  private Map<Conversation, Set<Tag>> conversationTags;
 
   /**
    * Constructs a new User.
@@ -40,6 +47,8 @@ public class User {
     this.creation = creation;
     this.hashedPassword = hashedPassword;
     this.about = about;
+    this.taggedConversations = new HashMap<>();
+    this.conversationTags = new HashMap<>();
   }
 
   /**
@@ -56,8 +65,33 @@ public class User {
     this.creation = creation;
     this.hashedPassword = hashedPassword;
     this.about = "";
+    this.taggedConversations = new HashMap<>();
+    this.conversationTags = new HashMap<>();
   }
 
+  /**
+   * Adds a Tag to a Conversation.
+   * @param tag The Tag of the Conversation.
+   * @param conversation The Conversation to be tagged.
+   */
+  public void addTaggedConversation(Tag tag, Conversation conversation) {
+    if (taggedConversations.containsKey(tag)) {
+      taggedConversations.get(tag).add(conversation);
+    } else {
+      Set<Conversation> conversations = new HashSet<>();
+      conversations.add(conversation);
+      taggedConversations.put(tag, conversations);
+    }
+  }
+
+  /**
+   * Gets all the Conversations that this User has tagged.
+   * @return A Map of Tags to Conversations with that Tag.
+   */
+  public Map<Tag, Set<Conversation>> getTaggedConversations() {
+    return taggedConversations;
+  }
+  
   /** Returns the ID of this User. */
   public UUID getId() {
     return id;
