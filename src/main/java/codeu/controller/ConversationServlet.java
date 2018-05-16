@@ -121,7 +121,7 @@ public class ConversationServlet extends HttpServlet {
 
     // Get all tags
     String tags = request.getParameter("tags");
-    if (tags != null) {
+    if (tags != null && tags.length() > 0) {
       if (!tags.matches("([\\w*](, ))*[\\w*]")) {
         request.setAttribute("error", "Please enter tags as comma-separated words with one space between them. Tags can only contain letters and numbers.");
         request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
@@ -134,6 +134,8 @@ public class ConversationServlet extends HttpServlet {
         Tag newTag = new Tag(UUID.randomUUID(), tag, Instant.now());
         user.addTaggedConversation(newTag, conversation);
       }
+
+      userStore.putUser(user);
     }
 
     conversationStore.addConversation(conversation);

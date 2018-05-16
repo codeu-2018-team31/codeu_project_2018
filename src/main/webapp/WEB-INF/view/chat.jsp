@@ -30,6 +30,7 @@ User loggedInUser = UserStore.getInstance().getUser(user);
 <html>
 <head>
   <title><%= conversation.getTitle() %></title>
+    
   <link rel="stylesheet" href="/css/main.css" type="text/css">
 
   <script>
@@ -56,10 +57,29 @@ User loggedInUser = UserStore.getInstance().getUser(user);
 
   <div id="container">
 
+    <% if(request.getAttribute("error") != null){ %>
+        <h2 style="color:red"><%= request.getAttribute("error") %></h2>
+    <% } %>
+
     <h1><%= conversation.getTitle() %>
       <a href="" style="float: right">&#8635;</a></h1>
-
+    
+    <% if (loggedInUser != null) { %>
+        <label class="form-control-label">Current tags:</label>
+        <p><%= request.getAttribute("tags") %><p>
+  
+        <form action="/addtags/<%= conversation.getTitle() %>" method="POST">
+          <div class="form-group">
+            <label class="form-control-label">New tags:</label>
+            <input type="text" name="tags" placeholder="Comma-separated tags" width="200px">
+          </div>
+          <button type="submit">Add tags</button>
+        </form>
+  
+        <hr/>
+    <% } %>
     <hr/>
+    
 
     <div id="chat">
       <ul>

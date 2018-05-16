@@ -16,6 +16,7 @@ package codeu.controller;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
+import codeu.model.data.Tag;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
@@ -23,6 +24,7 @@ import codeu.model.store.basic.UserStore;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -102,6 +104,26 @@ public class ChatServlet extends HttpServlet {
     UUID conversationId = conversation.getId();
 
     List<Message> messages = messageStore.getMessagesInConversation(conversationId);
+
+    String username = (String) request.getSession().getAttribute("user");
+    if (username != null) {
+      User user = userStore.getUser(username);
+      if (user != null) {
+        List<Tag> tags = user.getConversationTags(conversation);
+        if (tags.size() > 0) {
+          StringBuilder sb = new StringBuilder();
+          for (Tag tag : tags) {
+            sb.append(tag.getTag());
+            sb.append(", ");
+          }
+          request.setAttribute("tags", sb.toString().substring(0, sb.length() - 2));
+        } else {
+          request.setAttribute("tags", "");
+        }
+      }
+    } else {
+      request.setAttribute("tags", null);
+    }
 
     request.setAttribute("conversation", conversation);
     request.setAttribute("messages", messages);

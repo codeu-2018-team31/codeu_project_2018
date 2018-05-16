@@ -15,6 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -82,6 +83,26 @@ public class User {
       conversations.add(conversation);
       taggedConversations.put(tag, conversations);
     }
+    if (conversationTags.containsKey(conversation)) {
+      conversationTags.get(conversation).add(tag);
+    } else {
+      Set<Tag> tags = new HashSet<>();
+      tags.add(tag);
+      conversationTags.put(conversation, tags);
+    }
+  }
+
+  /**
+   * Gets an alphabetically sorted list of tags this User has added for a 
+   * particular conversation.
+   */
+  public List<Tag> getConversationTags(Conversation conversation) {
+    if (conversationTags.containsKey(conversation)) {
+      List<Tag> listedTags = new ArrayList<>(conversationTags.get(conversation));
+      listedTags.sort(new TagComparator());
+      return listedTags;
+    }
+    return new ArrayList<>();
   }
 
   /**
