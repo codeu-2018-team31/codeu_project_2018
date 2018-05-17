@@ -15,10 +15,18 @@ public class TagStoreTest {
 
   private TagStore tagStore;
   private PersistentStorageAgent mockPersistentStorageAgent;
+  private final UUID CONVERSATION_ID_ONE = UUID.randomUUID();
 
   private final Tag TAG_ONE =
       new Tag(
-          UUID.randomUUID(), "tag_one", Instant.ofEpochMilli(1000));
+          UUID.randomUUID(), CONVERSATION_ID_ONE, "tag_one", Instant.ofEpochMilli(1000));
+  private final Tag TAG_TWO =
+      new Tag(
+          UUID.randomUUID(), CONVERSATION_ID_ONE, "tag_two", Instant.ofEpochMilli(2000));
+  private final Tag TAG_THREE =
+      new Tag(
+          UUID.randomUUID(), UUID.randomUUID(), "tag_three", Instant.ofEpochMilli(3000));
+
 
   @Before
   public void setup() {
@@ -27,10 +35,19 @@ public class TagStoreTest {
 
     final List<Tag> tagList = new ArrayList<>();
     tagList.add(TAG_ONE);
+    tagList.add(TAG_TWO);
+    tagList.add(TAG_THREE);
     tagStore.setTags(tagList);
   }
 
-  
+  @Test
+  public void testGetTagsInConversation() {
+    List<Tag> resultTags = tagStore.getTagsInConversation(CONVERSATION_ID_ONE);
+
+    Assert.assertEquals(2, resultTags.size());
+    assertEquals(TAG_ONE, resultTags.get(0));
+    assertEquals(TAG_TWO, resultTags.get(1));
+  }
 
   @Test
   public void testAddTag() {
