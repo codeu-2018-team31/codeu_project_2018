@@ -84,7 +84,7 @@ public class TagStore {
   }
 
   /** Access the current set of tags known to the application. */
-  public List<Conversation> getAllTags() {
+  public List<Tag> getAllTags() {
     return tags;
   }
 
