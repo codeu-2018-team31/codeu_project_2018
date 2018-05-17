@@ -16,6 +16,7 @@ package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
+import codeu.model.data.Tag;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 
@@ -65,17 +66,20 @@ public class DefaultDataStore {
   private List<User> users;
   private List<Conversation> conversations;
   private List<Message> messages;
+  private List<Tag> tags;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private DefaultDataStore() {
     users = new ArrayList<>();
     conversations = new ArrayList<>();
     messages = new ArrayList<>();
+    tags = new ArrayList<>();
 
     if (USE_DEFAULT_DATA) {
       addRandomUsers();
       addRandomConversations();
       addRandomMessages();
+      addRandomTags();
     }
   }
 
@@ -95,16 +99,32 @@ public class DefaultDataStore {
     return messages;
   }
 
+  public List<Tag> getAllTags() {
+    return tags;
+  }
+
   private void addRandomUsers() {
 
     List<String> randomUsernames = getRandomUsernames();
     Collections.shuffle(randomUsernames);
 
-    for (int i = 0; i < DEFAULT_USER_COUNT; i++) {
+    for (int i = 0; i < DEFAULT_MESSAGE_COUNT; i++) {
         User user = new User(UUID.randomUUID(), randomUsernames.get(i), Instant.now(), 
           BCrypt.hashpw("password", BCrypt.gensalt()), "default about content");
       PersistentStorageAgent.getInstance().writeThrough(user);
       users.add(user);
+    }
+  }
+
+  private void addRandomTags() {
+
+    List<String> randomUsernames = getRandomUsernames();
+    Collections.shuffle(randomUsernames);
+
+    for (int i = 0; i < DEFAULT_USER_COUNT; i++) {
+        Tag tag = new Tag(UUID.randomUUID(), UUID.randomUUID(), randomUsernames.get(i), Instant.now());
+      PersistentStorageAgent.getInstance().writeThrough(tag);
+      tags.add(tag);
     }
   }
 
