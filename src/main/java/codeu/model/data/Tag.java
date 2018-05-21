@@ -30,7 +30,7 @@ public class Tag {
     return id;
   }
 
-  /** Returns the ID of the Conversation this Message belongs to. */
+  /** Returns the ID of the Conversation this Tag belongs to. */
   public UUID getConversationId() {
     return conversation;
   }
