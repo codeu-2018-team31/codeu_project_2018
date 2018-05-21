@@ -69,3 +69,4 @@ public class TagStoreTest {
     Assert.assertEquals(expectedTag.getCreationTime(), actualTag.getCreationTime());
   }
 }
+
