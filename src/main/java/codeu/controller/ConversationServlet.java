@@ -122,7 +122,7 @@ public class ConversationServlet extends HttpServlet {
     // Get all tags
     String tags = request.getParameter("tags");
     if (tags != null && tags.length() > 0) {
-      if (!tags.matches("([\\w*](, ))*[\\w*]*")) {
+      if (!tags.matches("(\\w*(,\\s)?)*")) {
         request.setAttribute("error", "Please enter tags as comma-separated words with one space between them. Tags can only contain letters and numbers.");
         request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
         return;
