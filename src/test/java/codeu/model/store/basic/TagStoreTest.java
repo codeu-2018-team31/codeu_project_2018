@@ -23,13 +23,13 @@ public class TagStoreTest {
 
   private final Tag TAG_ONE =
       new Tag(
-          UUID.randomUUID(), conversationOne, "tag_one", Instant.ofEpochMilli(1000));
+          UUID.randomUUID(), conversationOne.getId(), "tag_one", Instant.ofEpochMilli(1000));
   private final Tag TAG_TWO =
       new Tag(
-          UUID.randomUUID(), conversationOne, "tag_two", Instant.ofEpochMilli(2000));
+          UUID.randomUUID(), conversationOne.getId(), "tag_two", Instant.ofEpochMilli(2000));
   private final Tag TAG_THREE =
       new Tag(
-          UUID.randomUUID(), conversationTwo, "tag_three", Instant.ofEpochMilli(3000));
+          UUID.randomUUID(), conversationTwo.getId(), "tag_three", Instant.ofEpochMilli(3000));
   
 
   @Before
@@ -60,7 +60,7 @@ public class TagStoreTest {
     Conversation inputConversation = 
       new Conversation(UUID.randomUUID(), UUID.randomUUID(), "conversationOne", Instant.now());
     Tag inputTag =
-        new Tag(UUID.randomUUID(), inputConversation, "test_tag", Instant.now());
+        new Tag(UUID.randomUUID(), inputConversation.getId(), "test_tag", Instant.now());
       tagStore.addTag(inputTag);
     Tag resultTag =
         tagStore.getTagsInConversation(inputConversation.getId()).get(0);
@@ -71,7 +71,7 @@ public class TagStoreTest {
 
   private void assertEquals(Tag expectedTag, Tag actualTag) {
     Assert.assertEquals(expectedTag.getId(), actualTag.getId());
-    Assert.assertEquals(expectedTag.getConversation().getId(), actualTag.getConversation().getId());
+    Assert.assertEquals(expectedTag.getConversation(), actualTag.getConversation());
     Assert.assertEquals(expectedTag.getTag(), actualTag.getTag());
     Assert.assertEquals(expectedTag.getCreationTime(), actualTag.getCreationTime());
   }

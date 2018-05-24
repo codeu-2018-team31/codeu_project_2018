@@ -75,12 +75,11 @@ public class PersistentStorageAgentTest {
     Mockito.verify(mockPersistentDataStore).writeThrough(message);
   }
 
-
   @Test
   public void testWriteThroughTag() {
     Conversation conversation =
         new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
-    Tag tag = new Tag(UUID.randomUUID(), conversation, "Tag", Instant.now());
+    Tag tag = new Tag(UUID.randomUUID(), conversation.getId(), "Tag", Instant.now());
     persistentStorageAgent.writeThrough(tag);
     Mockito.verify(mockPersistentDataStore).writeThrough(tag);
   }

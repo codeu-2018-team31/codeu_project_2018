@@ -126,7 +126,7 @@ public class DefaultDataStore {
           new Conversation(UUID.randomUUID(), user.getId(), title, Instant.now());
 
     for (int i = 0; i < DEFAULT_USER_COUNT; i++) {
-        Tag tag = new Tag(UUID.randomUUID(), conversation, randomUsernames.get(i), Instant.now());
+        Tag tag = new Tag(UUID.randomUUID(), conversation.getId(), randomUsernames.get(i), Instant.now());
       PersistentStorageAgent.getInstance().writeThrough(tag);
       tags.add(tag);
     }

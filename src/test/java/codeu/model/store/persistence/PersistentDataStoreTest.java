@@ -163,8 +163,8 @@ public class PersistentDataStoreTest {
     Instant creationTwo = Instant.ofEpochMilli(2000);
     Conversation conversationTwo = new Conversation(idTwo, ownerTwo, titleTwo, creationTwo);
 
-    Tag inputTagOne = new Tag(idOne, conversationOne, titleOne, creationOne);
-    Tag inputTagTwo = new Tag(idTwo, conversationTwo, titleTwo, creationTwo);
+    Tag inputTagOne = new Tag(idOne, conversationOne.getId(), titleOne, creationOne);
+    Tag inputTagTwo = new Tag(idTwo, conversationTwo.getId(), titleTwo, creationTwo);
 
     // save
     persistentDataStore.writeThrough(inputTagOne);
@@ -176,13 +176,13 @@ public class PersistentDataStoreTest {
     // confirm that what we saved matches what we loaded
     Tag resultTagOne = resultTags.get(0);
     Assert.assertEquals(idOne, resultTagOne.getId());
-    Assert.assertEquals(conversationOne.getId(), resultTagOne.getConversation().getId());
+    Assert.assertEquals(conversationOne.getId(), resultTagOne.getConversation());
     Assert.assertEquals(titleOne, resultTagOne.getTag());
     Assert.assertEquals(creationOne, resultTagOne.getCreationTime());
 
     Tag resultTagTwo = resultTags.get(1);
     Assert.assertEquals(idTwo, resultTagTwo.getId());
-    Assert.assertEquals(conversationTwo.getId(), resultTagTwo.getConversation().getId());
+    Assert.assertEquals(conversationTwo.getId(), resultTagTwo.getConversation());
     Assert.assertEquals(titleTwo, resultTagTwo.getTag());
     Assert.assertEquals(creationTwo, resultTagTwo.getCreationTime());
   }

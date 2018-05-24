@@ -165,7 +165,7 @@ public class PersistentDataStore {
     for (Entity entity : results.asIterable()) {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
-        Conversation conversation = (Conversation) entity.getProperty("conversation");
+        UUID conversation = UUID.fromString((String) entity.getProperty("conversation"));
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String content = (String) entity.getProperty("content");
         Tag tag = new Tag(uuid, conversation, content, creationTime);
@@ -218,8 +218,8 @@ public class PersistentDataStore {
   public void writeThrough(Tag tag) {
     Entity tagEntity = new Entity("chat-tags");
     tagEntity.setProperty("uuid", tag.getId().toString());
-    tagEntity.setProperty("conversation", tag.getConversation());
-    tagEntity.setProperty("tag", tag.getTag());
+    tagEntity.setProperty("conversation", tag.getConversation().toString());
+    tagEntity.setProperty("content", tag.getTag());
     tagEntity.setProperty("creation_time", tag.getCreationTime().toString());
     datastore.put(tagEntity);
   }

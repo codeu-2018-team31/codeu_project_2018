@@ -101,7 +101,7 @@ public class TagStore {
     List<Tag> tagsInConversation = new ArrayList<>();
 
     for (Tag tag : tags) {
-      if (tag.getConversation().getId().equals(conversationId)) {
+      if (tag.getConversation().equals(conversationId)) {
         tagsInConversation.add(tag);
       }
     }
@@ -110,8 +110,7 @@ public class TagStore {
   }
 
   /** Access the current set of Conversations within the given Tag. */
-  public List<Conversation> getConversationsInTag(Tag tag) {
-    
+  public List<UUID> getConversationsInTag(Tag tag) {
     return tag.getConversations();
   }
 
