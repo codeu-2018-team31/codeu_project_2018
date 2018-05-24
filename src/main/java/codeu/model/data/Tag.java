@@ -48,7 +48,7 @@ public class Tag {
     return tag;
   }
 
-  /** Returns the creation time of this User. */
+  /** Returns the creation time of this Tag. */
   public Instant getCreationTime() {
     return creation;
   }
