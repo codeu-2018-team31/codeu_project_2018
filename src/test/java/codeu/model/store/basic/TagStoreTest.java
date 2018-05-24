@@ -53,23 +53,7 @@ public class TagStoreTest {
     assertEquals(TAG_TWO, resultTags.get(1));
   }
 
-   @Test
-  public void testgetConversationsInTag() {
-    TAG_ONE.addConversation(conversationTwo);
-    List<Conversation> resultConversations = tagStore.getConversationsInTag(TAG_ONE);
-
-    Assert.assertEquals(2, resultConversations.size());
-    assertEquals(conversationOne, resultConversations.get(0));
-    assertEquals(conversationTwo, resultConversations.get(1));
-  }
-
-  @Test
-  public void testgetConversationsInTag2() {
-    List<Conversation> resultConversations = tagStore.getConversationsInTag(TAG_TWO);
-
-    Assert.assertEquals(1, resultConversations.size());
-    assertEquals(conversationOne, resultConversations.get(0));
-  }
+   
 
   @Test
   public void testAddTag() {
