@@ -52,10 +52,6 @@ public class Tag {
     return id;
   }
 
-  /** Returns the List of Conversation IDs this tag belongs to. */
-  public List<UUID> getConversationIds() {
-    return conversations;
-  }
 
   /** Returns the content of this Tag. */
   public String getTag() {
