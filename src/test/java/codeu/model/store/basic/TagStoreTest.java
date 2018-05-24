@@ -46,7 +46,7 @@ public class TagStoreTest {
 
   @Test
   public void testGetTagsInConversation() {
-    List<Tag> resultTags = tagStore.getTagsInConversation(CONVERSATION_ID_ONE);
+    List<Tag> resultTags = tagStore.getTagsInConversation(conversationOne.getId());
 
     Assert.assertEquals(2, resultTags.size());
     assertEquals(TAG_ONE, resultTags.get(0));
@@ -79,7 +79,7 @@ public class TagStoreTest {
         new Tag(UUID.randomUUID(), inputConversation, "test_tag", Instant.now());
       tagStore.addTag(inputTag);
     Tag resultTag =
-        tagStore.getTagsInConversation(inputConversation).get(0);
+        tagStore.getTagsInConversation(inputConversation.getId()).get(0);
 
     assertEquals(inputTag, resultTag);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputTag);

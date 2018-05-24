@@ -111,10 +111,8 @@ public class TagStore {
 
   /** Access the current set of Conversations within the given Tag. */
   public List<Conversation> getConversationsInTag(Tag tag) {
-
-    List<Conversation> conversations = new ArrayList<>();
-    conversations = tag.getConversations();
-    return conversations;
+    
+    return tag.getConversations();
   }
 
 
