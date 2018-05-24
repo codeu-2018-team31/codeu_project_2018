@@ -107,6 +107,9 @@ public class ChatServlet extends HttpServlet {
     
     // Get all of this conversation's tags
     List<Tag> tags = conversation.getTags();
+    for (Tag tag : tags) {
+      System.out.print(tag.getTag());
+    }
 
     // Pass the List of Tags to chat.jsp
     request.setAttribute("tags", tags);

@@ -9,6 +9,7 @@ import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -81,7 +82,6 @@ public class TagServlet extends HttpServlet {
       throws IOException, ServletException {
     String requestUrl = request.getRequestURI();
     String conversationTitle = requestUrl.substring("/addtags/".length());
-    System.out.println(conversationTitle);
     Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
     if (conversation == null) {
       // Couldn't find conversation, redirect to conversation list
@@ -105,16 +105,17 @@ public class TagServlet extends HttpServlet {
       return;
     }
 
+    // Set request attributes to be ready to reload the chat page
+    request.setAttribute("conversation", conversation);
+    request.setAttribute("messages", messageStore.getMessagesInConversation(conversation.getId()));
+    List<Tag> tagsList = conversation.getTags();
+    request.setAttribute("tags", tagsList);
+
     // Get all tags
     String tags = request.getParameter("tags");
     if (tags != null && tags.length() > 0) {
       if (!tags.matches("([\\w*](, ))*[\\w*]*")) {
         request.setAttribute("error", "Please enter tags as comma-separated words with one space between them. Tags can only contain letters and numbers.");
-        request.setAttribute("conversation", conversation);
-        request.setAttribute("messages", messageStore.getMessagesInConversation(conversation.getId()));
-        List<Tag> tagsList = conversation.getTags();
-        // Pass List of Tags to chat.jsp
-        request.setAttribute("tags", tagsList);
         request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
         return;
       }
@@ -126,8 +127,14 @@ public class TagServlet extends HttpServlet {
         Tag newTag = new Tag(UUID.randomUUID(), conversation, tag, Instant.now());
         conversation.addTag(newTag);
       }
+      conversationStore.putConversation(conversation);
+      for (Tag tag : conversation.getTags()) {
+        System.out.println(tag.getTag());
+      }
+      // Update tags attribute to the expanded Tag list
+      request.setAttribute("tags", conversation.getTags());
     }
-    response.sendRedirect("/chat/" + conversationTitle);
+    request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
   }
 
 }

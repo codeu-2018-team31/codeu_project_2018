@@ -138,6 +138,7 @@ public class ConversationServlet extends HttpServlet {
         Tag newTag = new Tag(UUID.randomUUID(), conversation, tag.toLowerCase(), Instant.now());
         conversation.addTag(newTag);
       }
+      conversationStore.putConversation(conversation);
     }
 
     conversationStore.addConversation(conversation);
