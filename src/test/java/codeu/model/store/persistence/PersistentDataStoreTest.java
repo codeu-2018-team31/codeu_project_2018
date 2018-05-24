@@ -3,6 +3,7 @@ package codeu.model.store.persistence;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.Tag;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.time.Instant;
@@ -146,5 +147,43 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(authorTwo, resultMessageTwo.getAuthorId());
     Assert.assertEquals(contentTwo, resultMessageTwo.getContent());
     Assert.assertEquals(creationTwo, resultMessageTwo.getCreationTime());
+  }
+
+  @Test
+  public void testSaveAndLoadTags() throws PersistentDataStoreException {
+    UUID idOne = UUID.randomUUID();
+    UUID ownerOne = UUID.randomUUID();
+    String titleOne = "Test_Title";
+    Instant creationOne = Instant.ofEpochMilli(1000);
+    Conversation conversationOne = new Conversation(idOne, ownerOne, titleOne, creationOne);
+
+    UUID idTwo = UUID.randomUUID();
+    UUID ownerTwo = UUID.randomUUID();
+    String titleTwo = "Test_Title_Two";
+    Instant creationTwo = Instant.ofEpochMilli(2000);
+    Conversation conversationTwo = new Conversation(idTwo, ownerTwo, titleTwo, creationTwo);
+
+    Tag inputTagOne = new Tag(idOne, conversationOne.getId(), titleOne, creationOne);
+    Tag inputTagTwo = new Tag(idTwo, conversationTwo.getId(), titleTwo, creationTwo);
+
+    // save
+    persistentDataStore.writeThrough(inputTagOne);
+    persistentDataStore.writeThrough(inputTagTwo);
+
+    // load
+    List<Tag> resultTags = persistentDataStore.loadTags();
+
+    // confirm that what we saved matches what we loaded
+    Tag resultTagOne = resultTags.get(0);
+    Assert.assertEquals(idOne, resultTagOne.getId());
+    Assert.assertEquals(conversationOne.getId(), resultTagOne.getConversation());
+    Assert.assertEquals(titleOne, resultTagOne.getTag());
+    Assert.assertEquals(creationOne, resultTagOne.getCreationTime());
+
+    Tag resultTagTwo = resultTags.get(1);
+    Assert.assertEquals(idTwo, resultTagTwo.getId());
+    Assert.assertEquals(conversationTwo.getId(), resultTagTwo.getConversation());
+    Assert.assertEquals(titleTwo, resultTagTwo.getTag());
+    Assert.assertEquals(creationTwo, resultTagTwo.getCreationTime());
   }
 }

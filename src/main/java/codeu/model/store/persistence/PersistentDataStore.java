@@ -17,6 +17,7 @@ package codeu.model.store.persistence;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.Tag;
 import codeu.model.store.persistence.PersistentDataStoreException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -147,6 +148,40 @@ public class PersistentDataStore {
     return messages;
   }
 
+  /**
+   * Loads all Tag objects from the Datastore service and returns them in a List.
+   *
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
+   */
+  public List<Tag> loadTags() throws PersistentDataStoreException {
+
+    List<Tag> tags = new ArrayList<>();
+  
+    // Retrieve all tags from the datastore.
+    Query query = new Query("chat-tags");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        UUID conversation = UUID.fromString((String) entity.getProperty("conversation"));
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        String content = (String) entity.getProperty("content");
+        Tag tag = new Tag(uuid, conversation, content, creationTime);
+
+        tags.add(tag);
+      } catch (Exception e) {
+        // In a production environment, errors should be very rare. Errors which may
+        // occur include network errors, Datastore service errors, authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return tags;
+  }
+
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users");
@@ -177,5 +212,15 @@ public class PersistentDataStore {
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
+  }
+
+  /** Write a Tag object to the Datastore service. */
+  public void writeThrough(Tag tag) {
+    Entity tagEntity = new Entity("chat-tags");
+    tagEntity.setProperty("uuid", tag.getId().toString());
+    tagEntity.setProperty("conversation", tag.getConversation().toString());
+    tagEntity.setProperty("content", tag.getTag());
+    tagEntity.setProperty("creation_time", tag.getCreationTime().toString());
+    datastore.put(tagEntity);
   }
 }

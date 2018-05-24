@@ -8,34 +8,43 @@ import java.util.UUID;
 /** Class representing a tag. */
 public class Tag {
   private final UUID id;
+  private final UUID conversationId;
   private final String tag;
   private final Instant creation;
-  private List<Conversation> conversations;
+  private List<UUID> conversations;
 
   /**
    * Constructs a new Tag.
    *
    * @param id the ID of this Tag
-   * @param conversation The first Conversation this Tag is associated with.
+   * @param conversationId the Id of the first Conversation this Tag is associated with.
+   * @param conversations the Ids of the Conversations this Tag belongs to
    * @param tag the content of this Tag
    * @param creation the creation time of this Tag
    */
-  public Tag(UUID id, Conversation conversation, String tag, Instant creation) {
+
+  public Tag(UUID id, UUID conversationId, String tag, Instant creation) {
     this.id = id;
+    this.conversationId = conversationId;
     this.tag = tag;
     this.creation = creation;
     this.conversations = new ArrayList<>();
-    this.conversations.add(conversation);
+    this.conversations.add(conversationId);
   }
 
   /** Adds a Conversation that has this Tag */
-  public void addConversation(Conversation conversation) {
-    conversations.add(conversation);
+  public void addConversation(UUID conversationId) {
+    conversations.add(conversationId);
   }
 
   /** Gets all Conversations that have this Tag */
-  public List<Conversation> getConversations() {
+  public List<UUID> getConversations() {
     return conversations;
+  }
+
+  /** Gets the Conversation that this Tag was created with*/
+  public UUID getConversation() {
+    return conversationId;
   }
 
   /** Returns the ID of this Tag. */
