@@ -53,11 +53,6 @@ public class Tag {
     return id;
   }
 
-  /** Returns the ID of the Conversation this Tag belongs to. */
-  public UUID getConversationId() {
-    return conversation;
-  }
-
   /** Returns the content of this Tag. */
   public String getTag() {
     return tag;

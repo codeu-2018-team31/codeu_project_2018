@@ -121,7 +121,7 @@ public class DefaultDataStore {
     List<String> randomUsernames = getRandomUsernames();
     Collections.shuffle(randomUsernames);
      User user = getRandomElement(users);
-    String title = "Conversation_" + i;
+    String title = "Conversation_";
       Conversation conversation =
           new Conversation(UUID.randomUUID(), user.getId(), title, Instant.now());
 
