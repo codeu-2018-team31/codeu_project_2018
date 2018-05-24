@@ -4,8 +4,8 @@
   "description": "Google CodeU project Team 31, 2018",
   "main": "index.js",
   "dependencies": {
-    "emoji-js": "iamcal/js-emoji.git#9f5cfd92111088c54e48a60d424dc3d69473306d",
-    "textcomplete": "yuku-t/textcomplete.git#6f07195c47ace5e787cf7b46604b37a8bd5c6d30"
+    "emoji-js": "^3.4.0",
+    "textcomplete": "^0.17.1"
   },
   "devDependencies": {},
   "scripts": {
