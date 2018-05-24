@@ -17,7 +17,7 @@ public class TagTest {
 
     Tag test_tag = new Tag(id, conversation, tag, creation);
     Assert.assertEquals(id, test_tag.getId());
-    Assert.assertEquals(conv_id, test_tag.getConversation().getId();
+    Assert.assertEquals(conv_id, test_tag.getConversation().getId());
     Assert.assertEquals(tag, test_tag.getTag());
     Assert.assertEquals(creation, test_tag.getCreationTime());
   }

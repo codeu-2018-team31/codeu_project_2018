@@ -30,8 +30,7 @@ public class TagStoreTest {
   private final Tag TAG_THREE =
       new Tag(
           UUID.randomUUID(), conversationTwo, "tag_three", Instant.ofEpochMilli(3000));
-  TAG_ONE.addConversation(conversationTwo);
-
+  
 
   @Before
   public void setup() {
@@ -56,6 +55,7 @@ public class TagStoreTest {
 
    @Test
   public void testgetConversationsInTag() {
+    TAG_ONE.addConversation(conversationTwo);
     List<Conversation> resultConversations = tagStore.getConversationsInTag(TAG_ONE);
 
     Assert.assertEquals(2, resultConversations.size());
