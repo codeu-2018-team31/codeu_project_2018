@@ -18,6 +18,7 @@
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="codeu.model.data.User" %>
+<%@ page import="codeu.model.data.Tag" %>
 
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
@@ -66,10 +67,13 @@ User loggedInUser = UserStore.getInstance().getUser(user);
     
     <% if (loggedInUser != null) { %>
         <label class="form-control-label">Current tags:</label>
-        <p>|
-        <c:forEach items="${tags}" var="tag">
-        <c:out value="<a href='/tag/${tag.tag}'>${tag.tag}</a> |"/>
-        </c:forEach>
+        <p>
+        <% List<Tag> tags = (List<Tag>)request.getAttribute("tags");
+           for (Tag tag : tags) {
+             String tagName = tag.getTag();
+        %>
+          <a href="/tag/<%= tagName %>"><%= tagName %></a> |
+        <% } %>
         <p>
   
         <form action="/addtags/<%= conversation.getTitle() %>" method="POST">
