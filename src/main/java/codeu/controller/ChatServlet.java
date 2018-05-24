@@ -104,27 +104,12 @@ public class ChatServlet extends HttpServlet {
     UUID conversationId = conversation.getId();
 
     List<Message> messages = messageStore.getMessagesInConversation(conversationId);
+    
+    // Get all of this conversation's tags
+    List<Tag> tags = conversation.getTags();
 
-    String username = (String) request.getSession().getAttribute("user");
-    if (username != null) {
-      User user = userStore.getUser(username);
-      if (user != null) {
-        List<Tag> tags = user.getConversationTags(conversation);
-        if (tags.size() > 0) {
-          StringBuilder sb = new StringBuilder();
-          for (Tag tag : tags) {
-            sb.append(tag.getTag());
-            sb.append(", ");
-          }
-          request.setAttribute("tags", sb.toString().substring(0, sb.length() - 2));
-        } else {
-          request.setAttribute("tags", "");
-        }
-      }
-    } else {
-      request.setAttribute("tags", null);
-    }
-
+    // Pass the List of Tags to chat.jsp
+    request.setAttribute("tags", tags);
     request.setAttribute("conversation", conversation);
     request.setAttribute("messages", messages);
     request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);

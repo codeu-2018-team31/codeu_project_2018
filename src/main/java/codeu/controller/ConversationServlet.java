@@ -131,11 +131,13 @@ public class ConversationServlet extends HttpServlet {
       // Add all tags to the user's tagged conversations Map
       List<String> splitTags = Arrays.asList(tags.split(", "));
       for (String tag : splitTags) {
-        Tag newTag = new Tag(UUID.randomUUID(), tag, Instant.now());
-        user.addTaggedConversation(newTag, conversation);
-      }
+        // TODO: Check if Tag already exists in TagStore
 
-      userStore.putUser(user);
+        // Create new Tag object. Use the lowercase version of the tag string to
+        // ensure case insensitivity
+        Tag newTag = new Tag(UUID.randomUUID(), conversation, tag.toLowerCase(), Instant.now());
+        conversation.addTag(newTag);
+      }
     }
 
     conversationStore.addConversation(conversation);

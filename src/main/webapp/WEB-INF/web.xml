@@ -96,6 +96,11 @@
     <url-pattern>/addtags/*</url-pattern>
   </servlet-mapping>
 
+  <servlet-mapping>
+    <servlet-name>TagServlet</servlet-name>
+    <url-pattern>/tag/*</url-pattern>
+  </servlet-mapping>
+
   <session-config>
     <session-timeout>120</session-timeout>
   </session-config>

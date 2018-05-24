@@ -70,7 +70,7 @@ public class TagServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) 
       throws IOException, ServletException {
-    
+    // Render "Tag profile pages" with URLs in the form of "/tag/<tagname>"
   }
   
   /**
@@ -112,17 +112,9 @@ public class TagServlet extends HttpServlet {
         request.setAttribute("error", "Please enter tags as comma-separated words with one space between them. Tags can only contain letters and numbers.");
         request.setAttribute("conversation", conversation);
         request.setAttribute("messages", messageStore.getMessagesInConversation(conversation.getId()));
-        List<Tag> tagsList = user.getConversationTags(conversation);
-        if (tagsList.size() > 0) {
-          StringBuilder sb = new StringBuilder();
-          for (Tag tag : tagsList) {
-            sb.append(tag.getTag());
-            sb.append(", ");
-          }
-          request.setAttribute("tags", sb.toString().substring(0, sb.length() - 2));
-        } else {
-          request.setAttribute("tags", "");
-        }
+        List<Tag> tagsList = conversation.getTags();
+        // Pass List of Tags to chat.jsp
+        request.setAttribute("tags", tagsList);
         request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
         return;
       }
@@ -130,10 +122,10 @@ public class TagServlet extends HttpServlet {
       // Add all tags to the user's tagged conversations Map
       List<String> splitTags = Arrays.asList(tags.split(", "));
       for (String tag : splitTags) {
-        Tag newTag = new Tag(UUID.randomUUID(), tag, Instant.now());
-        user.addTaggedConversation(newTag, conversation);
+        // TODO: Check if the Tag already exists in TagStore
+        Tag newTag = new Tag(UUID.randomUUID(), conversation, tag, Instant.now());
+        conversation.addTag(newTag);
       }
-      userStore.putUser(user);
     }
     response.sendRedirect("/chat/" + conversationTitle);
   }

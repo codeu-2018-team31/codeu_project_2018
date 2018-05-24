@@ -66,7 +66,11 @@ User loggedInUser = UserStore.getInstance().getUser(user);
     
     <% if (loggedInUser != null) { %>
         <label class="form-control-label">Current tags:</label>
-        <p><%= request.getAttribute("tags") %><p>
+        <p>|
+        <c:forEach items="${tags}" var="tag">
+        <a href="/tag/<c:out value="${tag.tag}">"><c:out value="${tag.tag}"></a> |
+        </c:forEach> 
+        <p>
   
         <form action="/addtags/<%= conversation.getTitle() %>" method="POST">
           <div class="form-group">
