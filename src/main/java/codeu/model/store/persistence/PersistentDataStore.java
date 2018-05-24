@@ -165,7 +165,7 @@ public class PersistentDataStore {
     for (Entity entity : results.asIterable()) {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
-        Conversation conversation = entity.getProperty("conversation"));
+        Conversation conversation = entity.getProperty("conversation");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String content = (String) entity.getProperty("content");
         Tag tag = new Tag(uuid, conversation, content, creationTime);

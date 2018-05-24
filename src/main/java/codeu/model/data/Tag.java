@@ -53,6 +53,13 @@ public class Tag {
     return id;
   }
 
+<<<<<<< HEAD
+=======
+  /** Returns the ID of the Conversation this Tag belongs to. */
+  public UUID getConversationId() {
+    return conversation;
+  }
+>>>>>>> tagDatastore
 
   /** Returns the content of this Tag. */
   public String getTag() {
