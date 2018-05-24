@@ -108,6 +108,23 @@ public class TagStore {
     return tagsInConversation;
   }
 
+  /** Access the current set of Conversations within the given Tag. */
+  public List<UUID> getConversationsInTag(Tag tag) {
+
+    List<UUID> conversations = new ArrayList<>();
+    conversations = tag.getConversationIds();
+
+    return conversations;
+  }
+
+
+  /** Writes through the current set of tags known to the application. 
+    * To be called when updating a Tag's attribute.  
+    */
+  public void putTag(Tag tag) {
+    persistentStorageAgent.writeThrough(tag);
+  }
+
   /** Sets the List of Tags stored by this TagStore. */
   public void setTags(List<Tag> tags) {
     this.tags = tags;
