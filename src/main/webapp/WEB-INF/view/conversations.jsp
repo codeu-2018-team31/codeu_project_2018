@@ -21,6 +21,8 @@
 <%
 String user = (String) request.getSession().getAttribute("user");
 User loggedInUser = UserStore.getInstance().getUser(user);
+List<Conversation> conversations =
+      (List<Conversation>) request.getAttribute("conversations");
 %>
 
 <!DOCTYPE html>
@@ -52,9 +54,13 @@ User loggedInUser = UserStore.getInstance().getUser(user);
     <% if(request.getSession().getAttribute("user") != null){ %>
       <h1>New Conversation</h1>
       <form action="/conversations" method="POST">
-          <div class="form-group">
-            <label class="form-control-label">Title:</label>
+        <div class="form-group">
+          <label class="form-control-label">Title:</label>
           <input type="text" name="conversationTitle">
+        </div>
+        <div class="form-group">
+          <label class="form-control-label">Tags (Optional):</label>
+          <input type="text" name="tags" placeholder="Comma-separated tags" width="200px">
         </div>
 
         <button type="submit">Create</button>
@@ -66,8 +72,6 @@ User loggedInUser = UserStore.getInstance().getUser(user);
     <h1>Conversations</h1>
 
     <%
-    List<Conversation> conversations =
-      (List<Conversation>) request.getAttribute("conversations");
     if(conversations == null || conversations.isEmpty()){
     %>
       <p>Create a conversation to get started.</p>
