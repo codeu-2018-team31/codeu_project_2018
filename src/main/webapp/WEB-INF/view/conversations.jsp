@@ -21,6 +21,8 @@
 <%
 String user = (String) request.getSession().getAttribute("user");
 User loggedInUser = UserStore.getInstance().getUser(user);
+List<Conversation> conversations =
+      (List<Conversation>) request.getAttribute("conversations");
 %>
 
 <!DOCTYPE html>
@@ -70,8 +72,6 @@ User loggedInUser = UserStore.getInstance().getUser(user);
     <h1>Conversations</h1>
 
     <%
-    List<Conversation> conversations =
-      (List<Conversation>) request.getAttribute("conversations");
     if(conversations == null || conversations.isEmpty()){
     %>
       <p>Create a conversation to get started.</p>
