@@ -51,9 +51,7 @@ public class TagStoreTest {
     Assert.assertEquals(2, resultTags.size());
     assertEquals(TAG_ONE, resultTags.get(0));
     assertEquals(TAG_TWO, resultTags.get(1));
-  }
-
-   
+  } 
 
   @Test
   public void testAddTag() {
