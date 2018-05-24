@@ -122,13 +122,12 @@ public class ConversationServlet extends HttpServlet {
     // Get all tags
     String tags = request.getParameter("tags");
     if (tags != null && tags.length() > 0) {
-      if (!tags.matches("([\\w*](, ))*[\\w*]")) {
+      if (!tags.matches("([\\w*](, ))*[\\w*]*")) {
         request.setAttribute("error", "Please enter tags as comma-separated words with one space between them. Tags can only contain letters and numbers.");
         request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
         return;
       }
 
-      // Add all tags to the user's tagged conversations Map
       List<String> splitTags = Arrays.asList(tags.split(", "));
       for (String tag : splitTags) {
         // TODO: Check if Tag already exists in TagStore
