@@ -157,7 +157,7 @@ public class PersistentDataStore {
   public List<Tag> loadTags() throws PersistentDataStoreException {
 
     List<Tag> tags = new ArrayList<>();
-
+  
     // Retrieve all tags from the datastore.
     Query query = new Query("chat-tags");
     PreparedQuery results = datastore.prepare(query);
@@ -165,10 +165,11 @@ public class PersistentDataStore {
     for (Entity entity : results.asIterable()) {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
-        UUID conversationUuid = UUID.fromString((String) entity.getProperty("conv_uuid"));
+        Conversation conversation = entity.getProperty("conversation"));
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String content = (String) entity.getProperty("content");
-        Tag tag = new Tag(uuid, conversationUuid, content, creationTime);
+        Tag tag = new Tag(uuid, conversation, content, creationTime);
+
         tags.add(tag);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -217,7 +218,7 @@ public class PersistentDataStore {
   public void writeThrough(Tag tag) {
     Entity tagEntity = new Entity("chat-tags");
     tagEntity.setProperty("uuid", tag.getId().toString());
-    tagEntity.setProperty("conv_uuid", tag.getConversationId().toString());
+    tagEntity.setProperty("conversation", tag.getConversation());
     tagEntity.setProperty("tag", tag.getTag());
     tagEntity.setProperty("creation_time", tag.getCreationTime().toString());
     datastore.put(tagEntity);

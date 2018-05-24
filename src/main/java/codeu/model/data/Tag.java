@@ -8,6 +8,7 @@ import java.util.UUID;
 /** Class representing a tag. */
 public class Tag {
   private final UUID id;
+  private final Conversation conversation;
   private final String tag;
   private final Instant creation;
   private List<Conversation> conversations;
@@ -25,6 +26,7 @@ public class Tag {
   public Tag(UUID id, Conversation conversation, String tag, Instant creation) {
 
     this.id = id;
+    this.conversation = conversation;
     this.tag = tag;
     this.creation = creation;
     this.conversations = new ArrayList<>();
@@ -39,6 +41,11 @@ public class Tag {
   /** Gets all Conversations that have this Tag */
   public List<Conversation> getConversations() {
     return conversations;
+  }
+
+  /** Gets the Conversation that this Tag was created with*/
+  public Conversation getConversation() {
+    return conversation;
   }
 
   /** Returns the ID of this Tag. */

@@ -119,15 +119,14 @@ public class DefaultDataStore {
   private void addRandomTags() {
 
     List<String> randomUsernames = getRandomUsernames();
-    List<UUID> randomConversations = new ArrayList<>();
-    randomConversations.add(UUID.randomUUID());
-    randomConversations.add(UUID.randomUUID());
-    randomConversations.add(UUID.randomUUID());
-
     Collections.shuffle(randomUsernames);
+     User user = getRandomElement(users);
+    String title = "Conversation_" + i;
+      Conversation conversation =
+          new Conversation(UUID.randomUUID(), user.getId(), title, Instant.now());
 
     for (int i = 0; i < DEFAULT_USER_COUNT; i++) {
-        Tag tag = new Tag(UUID.randomUUID(), randomConversations, randomUsernames.get(i), Instant.now());
+        Tag tag = new Tag(UUID.randomUUID(), conversation, randomUsernames.get(i), Instant.now());
       PersistentStorageAgent.getInstance().writeThrough(tag);
       tags.add(tag);
     }
