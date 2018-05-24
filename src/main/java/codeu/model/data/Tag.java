@@ -9,8 +9,6 @@ import java.util.UUID;
 public class Tag {
   private final UUID id;
   private final String tag;
-  private final UUID conversation;
-  private final List<UUID> conversations;
   private final Instant creation;
   private List<Conversation> conversations;
 
@@ -18,16 +16,12 @@ public class Tag {
    * Constructs a new Tag.
    *
    * @param id the ID of this Tag
-<<<<<<< HEAD
+   * @param conversation The first Conversation this Tag is associated with.
    * @param conversations the IDs of the Conversations this Tag belongs to
    * @param tag the content of this Tag
    * @param creation the creation time of this Tag
    */
-=======
-   * @param conversation The first Conversation this Tag is associated with.
-   * @param tag the content of this Tag
-   * @param creation the creation time of this Tag
-   */
+
   public Tag(UUID id, Conversation conversation, String tag, Instant creation) {
 
     this.id = id;
