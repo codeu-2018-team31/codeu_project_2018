@@ -89,10 +89,10 @@ public class TagStore {
    *
    * @return null if Tag name does not match any existing Tag.
    */
-  public Tag getTag(String tag_contents) {
+  public Tag getTag(String tagContents) {
     // This approach will be pretty slow if we have many tags.
     for (Tag t : tags) {
-      if (tag_contents.equals(t.getTag())) {
+      if (tagContents.equals(t.getTag())) {
         return t;
       }
     }
@@ -130,10 +130,10 @@ public class TagStore {
   }
 
    /** Check whether a Conversation title is already known to the application. */
-  public boolean isTagTaken(String tag) {
+  public boolean isTagTaken(String tagContents) {
     // This approach will be pretty slow if we have many Conversations.
     for (Tag t : tags) {
-      if (tag.equals(t.getTag())) {
+      if (tagContents.equals(t.getTag())) {
         return true;
       }
     }

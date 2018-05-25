@@ -100,10 +100,10 @@ public class TagServlet extends HttpServlet {
     String extractedTag = m.group(1);
     Tag thisTag = tagStore.getTag(extractedTag);
 
-    List<UUID> conversationIDs = thisTag.getConversations();
+    List<UUID> conversationIds = thisTag.getConversations();
 
     List<String> conversationTitles = new ArrayList<>();
-    for (UUID id : conversationIDs) {
+    for (UUID id : conversationIds) {
       Conversation convo = conversationStore.getConversationWithID(id);
       conversationTitles.add(convo.getTitle());
     }
