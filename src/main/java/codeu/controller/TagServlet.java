@@ -6,6 +6,7 @@ import codeu.model.data.Tag;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.TagStore;
 
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
@@ -33,6 +34,8 @@ public class TagServlet extends HttpServlet {
   /** Store class that gives access to Users. */
   private UserStore userStore;
 
+  /** Store class that gives access to Tags. */
+  private TagStore tagStore;
 
   /**
    * Set up state for handling tag-related requests. This method is only called when
@@ -44,6 +47,7 @@ public class TagServlet extends HttpServlet {
     setConversationStore(ConversationStore.getInstance());
     setMessageStore(MessageStore.getInstance());
     setUserStore(UserStore.getInstance());
+    setTagStore(TagStore.getInstance());
   }
 
   /**
@@ -68,6 +72,46 @@ public class TagServlet extends HttpServlet {
    */
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
+  }
+
+  /**
+   * Sets the TagStore used by this servlet. This function provides a common setup method
+   * for use by the test framework or the servlet's init() function.
+   */
+  void setTagStore(TagStore tagStore) {
+    this.tagStore = tagStore;
+  }
+
+  /**
+   * This function fires when a user requests the /tag URL. It gets the contents of the tag from
+   * the URL and finds the corresponding conversation information.
+   * It then forwards to tag.jsp for rendering.
+   */
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) 
+      throws IOException, ServletException {
+    String requestUrl = request.getRequestURI();
+    Matcher m = Pattern.compile("^/tag/(.+)").matcher(requestUrl);
+    if (!m.find()) {
+      System.out.println("wrong URL pattern: " + requestUrl);
+      return; // return error 
+    }
+
+    String extractedTag = m.group(1);
+    Tag thisTag = tagStore.getTag(extractedTag);
+
+    List<UUID> conversationIDs = thisTag.getConversations();
+
+    List<String> conversationTitles = new ArrayList<>();
+    for (UUID id : conversationIDs) {
+      Conversation convo = conversationStore.getConversationWithID(id);
+      conversationTitles.add(convo.getTitle());
+    }
+    
+    request.setAttribute("extracted_tag", thisTag);
+    request.setAttribute("conversations", conversationTitles);
+    
+    request.getRequestDispatcher("/WEB-INF/view/tag.jsp").forward(request, response);
   }
 
   /**
@@ -121,15 +165,23 @@ public class TagServlet extends HttpServlet {
       }
 
       List<String> splitTags = Arrays.asList(tags.split(", "));
+
       for (String tag : splitTags) {
-        // TODO: Check if the Tag already exists in TagStore
-        Tag newTag = new Tag(UUID.randomUUID(), conversation.getId(), tag.toLowerCase(), Instant.now());
-        conversation.addTag(newTag);
+        // Creation of a new Tag object
+        if (!tagStore.isTagTaken(tag)) { 
+          Tag newTag = new Tag(UUID.randomUUID(), conversation.getId(), tag.toLowerCase(), Instant.now());
+          tagStore.addTag(newTag);
+          conversation.addTag(newTag);
+        }
+        // User inputs a Tag that is already known to the application
+        else {
+          Tag oldTag = tagStore.getTag(tag);
+          oldTag.addConversation(conversation.getId());
+          tagStore.putTag(oldTag);
+          conversation.addTag(oldTag);
+        }
       }
       conversationStore.putConversation(conversation);
-      for (Tag tag : conversation.getTags()) {
-        System.out.println(tag.getTag());
-      }
     }
 
     request.setAttribute("tags", conversation.getTags());

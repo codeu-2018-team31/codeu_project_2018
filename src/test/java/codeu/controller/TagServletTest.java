@@ -20,6 +20,7 @@ import codeu.model.data.Tag;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.TagStore;
 import codeu.model.store.persistence.PersistentStorageAgent;
 
 import codeu.model.store.basic.UserStore;
@@ -39,6 +40,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.UUID;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TagServletTest {
 
@@ -51,7 +54,7 @@ public class TagServletTest {
 
   private ConversationStore conversationStore;
   private MessageStore messageStore;
-
+  private TagStore tagStore;
   private UserStore userStore;
 
   static final String TEST_USERNAME = "test username";
@@ -72,20 +75,37 @@ public class TagServletTest {
 
     mockResponse = Mockito.mock(HttpServletResponse.class);
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
-    Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/profile.jsp"))
+    Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/tag.jsp"))
         .thenReturn(mockRequestDispatcher);
     
     userStore = UserStore.getTestInstance(mockPersistentStorageAgent);
     conversationStore = ConversationStore.getTestInstance(mockPersistentStorageAgent);
     messageStore = MessageStore.getTestInstance(mockPersistentStorageAgent);
+    tagStore = TagStore.getTestInstance(mockPersistentStorageAgent);
 
     tagServlet.setConversationStore(conversationStore);
     tagServlet.setMessageStore(messageStore);
     tagServlet.setUserStore(userStore);
+    tagServlet.setTagStore(tagStore);
 
     conversationStore.addConversation(TEST_CONVO);
+    tagStore.addTag(TEST_TAG);
   }
 
+  @Test
+    public void testDoGet() throws IOException, ServletException {
+    Mockito.when(mockRequest.getRequestURI()).thenReturn("/tag/" + TEST_TAG.getTag());
+    
+    List<String> conversations = new ArrayList<>();
+    conversations.add(TEST_CONVO.getTitle()); 
+
+    tagServlet.doGet(mockRequest, mockResponse);
+
+    Mockito.verify(mockRequest).setAttribute("extracted_tag", TEST_TAG);
+    Mockito.verify(mockRequest).setAttribute("conversations", conversations);
+    Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
+  }
+   
   @Test
   public void testDoPost_UserNotLoggedIn() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/addtags/" + TEST_CONVO.getTitle());
@@ -126,7 +146,7 @@ public class TagServletTest {
   public void testDoPost_AddNewTags() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/addtags/" + TEST_CONVO.getTitle());
     Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
-    Mockito.when(mockRequest.getParameter("tags")).thenReturn("test_tags");
+    Mockito.when(mockRequest.getParameter("tags")).thenReturn("test, tags, now");
 
     userStore.addUser(TEST_USER);
 
