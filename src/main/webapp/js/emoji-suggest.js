@@ -1,3 +1,4 @@
+// Allows users to input emojis to the DOM element with ID #userInput
 $(document).ready(() => {
   const userInput = $("#userInput");
   const editor = new Textcomplete.editors.Textarea(userInput[0]);

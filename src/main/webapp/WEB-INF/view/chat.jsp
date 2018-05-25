@@ -30,7 +30,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
   <link rel="stylesheet" href="/css/main.css" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/emoji-js/lib/emoji.js"></script>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.emoji.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/emoji-js/lib/jquery.emoji.js"></script>
   <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/textcomplete/dist/textcomplete.js"></script>
   <script type="text/javascript" src="${pageContext.request.contextPath}/js/emoji-suggest.js"></script>
 
