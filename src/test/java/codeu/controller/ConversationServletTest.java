@@ -16,8 +16,10 @@ package codeu.controller;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.User;
+import codeu.model.data.Tag;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.TagStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -43,11 +45,13 @@ public class ConversationServletTest {
   private RequestDispatcher mockRequestDispatcher;
   private ConversationStore mockConversationStore;
   private UserStore mockUserStore;
+  private TagStore mockTagStore;
 
   static final String TEST_USERNAME = "test_username";
   static final String TEST_PASSWORD = "test_password";
   static final String TEST_ABOUT = "test_about";
   static final String TEST_CONVERSATION = "test_conversation";
+  static final String TEST_TAG = "test_tag";
 
   @Before
   public void setup() {
@@ -67,6 +71,9 @@ public class ConversationServletTest {
 
     mockUserStore = Mockito.mock(UserStore.class);
     conversationServlet.setUserStore(mockUserStore);
+
+    mockTagStore = Mockito.mock(TagStore.class);
+    conversationServlet.setTagStore(mockTagStore);
   }
 
   @Test
@@ -147,6 +154,7 @@ public class ConversationServletTest {
     Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
     Mockito.when(mockSession.getAttribute("password")).thenReturn(TEST_PASSWORD);
     Mockito.when(mockSession.getAttribute("about")).thenReturn(TEST_ABOUT);
+    Mockito.when(mockRequest.getParameter("tags")).thenReturn(TEST_TAG);
 
     User fakeUser = new User(UUID.randomUUID(), TEST_USERNAME, Instant.now(), TEST_PASSWORD, TEST_ABOUT);
     Mockito.when(mockUserStore.getUser(TEST_USERNAME)).thenReturn(fakeUser);
@@ -154,6 +162,12 @@ public class ConversationServletTest {
     Mockito.when(mockConversationStore.isTitleTaken(TEST_CONVERSATION)).thenReturn(false);
 
     conversationServlet.doPost(mockRequest, mockResponse);
+
+    ArgumentCaptor<Tag> tagArgumentCaptor =
+        ArgumentCaptor.forClass(Tag.class);
+    Mockito.verify(mockTagStore).addTag(tagArgumentCaptor.capture());
+    Assert.assertEquals(tagArgumentCaptor.getValue().getTag(), TEST_TAG);
+
 
     ArgumentCaptor<Conversation> conversationArgumentCaptor =
         ArgumentCaptor.forClass(Conversation.class);

@@ -101,7 +101,7 @@ public class TagServletTest {
 
     tagServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("extracted_tag", TEST_TAG);
+    Mockito.verify(mockRequest).setAttribute("extracted_tag", TEST_TAG.getTag());
     Mockito.verify(mockRequest).setAttribute("conversations", conversations);
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
@@ -127,22 +127,6 @@ public class TagServletTest {
   }
 
   @Test
-  public void testDoPost_NoNewTags() throws IOException, ServletException {
-    Mockito.when(mockRequest.getRequestURI()).thenReturn("/addtags/" + TEST_CONVO.getTitle());
-    Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
-
-    userStore.addUser(TEST_USER);
-
-    messageStore.addMessage(TEST_MESSAGE);
-
-    tagServlet.doPost(mockRequest, mockResponse);
-
-    Mockito.verify(mockRequest).setAttribute("conversation", TEST_CONVO);
-    Mockito.verify(mockRequest).setAttribute("tags", TEST_CONVO.getTags());
-    Mockito.verify(mockResponse).sendRedirect("/chat/test_convo");
-  }
-
-  @Test
   public void testDoPost_AddNewTags() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/addtags/" + TEST_CONVO.getTitle());
     Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
@@ -155,7 +139,7 @@ public class TagServletTest {
     tagServlet.doPost(mockRequest, mockResponse);
 
     Mockito.verify(mockRequest).setAttribute("conversation", TEST_CONVO);
-    Mockito.verify(mockRequest).setAttribute("tags", TEST_CONVO.getTags());
+    Mockito.verify(mockRequest).setAttribute("tags", tagStore.getTagsInConversation(TEST_CONVO.getId()));
     Mockito.verify(mockResponse).sendRedirect("/chat/test_convo");
   }
 }

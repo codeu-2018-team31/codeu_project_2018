@@ -68,7 +68,7 @@ User loggedInUser = UserStore.getInstance().getUser(user);
     <% if (loggedInUser != null) { %>
         <label class="form-control-label">Current tags:</label>
         <p>
-        <% List<Tag> tags = (List<Tag>)request.getAttribute("tags");
+        <% List<Tag> tags = (List<Tag>) request.getAttribute("tags");
            for (Tag tag : tags) {
              String tagName = tag.getTag();
         %>

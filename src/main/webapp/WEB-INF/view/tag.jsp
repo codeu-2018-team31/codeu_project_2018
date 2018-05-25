@@ -24,7 +24,8 @@
 
 <%
 String user = (String) request.getSession().getAttribute("user");
-Tag tag = (Tag) request.getAttribute("extracted_tag");
+String tag = (String) request.getAttribute("extracted_tag");
+List<String> conversationTitles = (List<String>) request.getAttribute("conversations");
 User loggedInUser = UserStore.getInstance().getUser(user);
 ConversationStore conversationStore = ConversationStore.getInstance();
 %>
@@ -59,16 +60,15 @@ ConversationStore conversationStore = ConversationStore.getInstance();
 
   <div id="container">
 
-    <h1> <%= tag.getTag() %></h1>
-    <h2> Check out other conversations with tagged with <%= tag.getTag() %>! </h2>
-    <% for (UUID convo : (List<UUID>) tag.getConversations()) { 
-        String conversationTitle = conversationStore.getConversationWithID(convo).getTitle();
+    <h1> <%= tag %></h1>
+    <h2> Check out other conversations with tagged with <%= tag %>! </h2>
+    <ul class="mdl-list"> 
+    <% for (String convo : conversationTitles) { 
     %>
-        <ul class="mdl-list"> 
-          <li><a href="/chat/<%= conversationTitle %>">
-          <%= conversationTitle %></a></li>
-        </ul>
+          <li><a href="/chat/<%= convo %>">
+          <%= convo %></a></li>
     <% } %> 
+    </ul>
   </div>
 
 </body>

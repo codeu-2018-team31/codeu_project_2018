@@ -84,21 +84,6 @@ public class TagStore {
     return loaded;
   }
 
-  /**
-   * Access the Tag object with the given name.
-   *
-   * @return null if Tag name does not match any existing Tag.
-   */
-  public Tag getTag(String tag_contents) {
-    // This approach will be pretty slow if we have many tags.
-    for (Tag t : tags) {
-      if (tag_contents.equals(t.getTag())) {
-        return t;
-      }
-    }
-    return null;
-  }
-
   /** Access the current set of tags known to the application. */
   public List<Tag> getAllTags() {
     return tags;
@@ -124,12 +109,7 @@ public class TagStore {
     return tagsInConversation;
   }
 
-  /** Access the current set of Conversations within the given Tag. */
-  public List<UUID> getConversationsInTag(Tag tag) {
-    return tag.getConversations();
-  }
-
-   /** Check whether a Conversation title is already known to the application. */
+   /** Check whether a Tag title is already known to the application. */
   public boolean isTagTaken(String tag) {
     // This approach will be pretty slow if we have many Conversations.
     for (Tag t : tags) {

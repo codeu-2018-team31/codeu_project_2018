@@ -98,17 +98,18 @@ public class TagServlet extends HttpServlet {
     }
 
     String extractedTag = m.group(1);
-    Tag thisTag = tagStore.getTag(extractedTag);
-
-    List<UUID> conversationIDs = thisTag.getConversations();
 
     List<String> conversationTitles = new ArrayList<>();
-    for (UUID id : conversationIDs) {
-      Conversation convo = conversationStore.getConversationWithID(id);
-      conversationTitles.add(convo.getTitle());
+
+    // Sets request attribute to a list of Conversation titles that are associated with the Tag
+    for (Tag tag : tagStore.getAllTags()) {
+      if (tag.getTag().equals(extractedTag)) {
+        Conversation convo = conversationStore.getConversationWithID(tag.getConversation());
+        conversationTitles.add(convo.getTitle());
+      }
     }
     
-    request.setAttribute("extracted_tag", thisTag);
+    request.setAttribute("extracted_tag", extractedTag);
     request.setAttribute("conversations", conversationTitles);
     
     request.getRequestDispatcher("/WEB-INF/view/tag.jsp").forward(request, response);
@@ -167,24 +168,12 @@ public class TagServlet extends HttpServlet {
       List<String> splitTags = Arrays.asList(tags.split(", "));
 
       for (String tag : splitTags) {
-        // Creation of a new Tag object
-        if (!tagStore.isTagTaken(tag)) { 
-          Tag newTag = new Tag(UUID.randomUUID(), conversation.getId(), tag.toLowerCase(), Instant.now());
-          tagStore.addTag(newTag);
-          conversation.addTag(newTag);
-        }
-        // User inputs a Tag that is already known to the application
-        else {
-          Tag oldTag = tagStore.getTag(tag);
-          oldTag.addConversation(conversation.getId());
-          tagStore.putTag(oldTag);
-          conversation.addTag(oldTag);
-        }
+        Tag newTag = new Tag(UUID.randomUUID(), conversation.getId(), tag.toLowerCase(), Instant.now());
+        tagStore.addTag(newTag);
       }
-      conversationStore.putConversation(conversation);
     }
 
-    request.setAttribute("tags", conversation.getTags());
+    request.setAttribute("tags", tagStore.getTagsInConversation(conversation.getId()));
     response.sendRedirect("/chat/" + conversationTitle);
   }
 

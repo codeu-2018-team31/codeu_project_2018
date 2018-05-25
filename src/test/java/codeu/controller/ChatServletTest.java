@@ -17,9 +17,11 @@ package codeu.controller;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.Tag;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.TagStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ public class ChatServletTest {
   private ConversationStore mockConversationStore;
   private MessageStore mockMessageStore;
   private UserStore mockUserStore;
+  private TagStore mockTagStore;
 
   static final String TEST_USERNAME = "test username";
   static final String TEST_PASSWORD = "test password";
@@ -72,6 +75,9 @@ public class ChatServletTest {
 
     mockUserStore = Mockito.mock(UserStore.class);
     chatServlet.setUserStore(mockUserStore);
+
+    mockTagStore = Mockito.mock(TagStore.class);
+    chatServlet.setTagStore(mockTagStore);
   }
 
   @Test
@@ -94,6 +100,15 @@ public class ChatServletTest {
             Instant.now()));
     Mockito.when(mockMessageStore.getMessagesInConversation(fakeConversationId))
         .thenReturn(fakeMessageList);
+
+    List<Tag> fakeTagList = new ArrayList<>();
+    fakeTagList.add(
+        new Tag(
+            UUID.randomUUID(),
+            UUID.randomUUID(),
+            "test tag",
+            Instant.now()));
+    Mockito.when(mockTagStore.getAllTags()).thenReturn(fakeTagList);  
 
     chatServlet.doGet(mockRequest, mockResponse);
 
