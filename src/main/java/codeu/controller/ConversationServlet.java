@@ -134,7 +134,7 @@ public class ConversationServlet extends HttpServlet {
 
         // Create new Tag object. Use the lowercase version of the tag string to
         // ensure case insensitivity
-        Tag newTag = new Tag(UUID.randomUUID(), conversation, tag.toLowerCase(), Instant.now());
+        Tag newTag = new Tag(UUID.randomUUID(), conversation.getId(), tag.toLowerCase(), Instant.now());
         conversation.addTag(newTag);
       }
       conversationStore.putConversation(conversation);

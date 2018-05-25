@@ -57,7 +57,7 @@ public class TagServletTest {
   static final String TEST_USERNAME = "test username";
   static final UUID TEST_CONVO_ID = UUID.randomUUID();
   static final Conversation TEST_CONVO = new Conversation(TEST_CONVO_ID, UUID.randomUUID(), "test_convo", Instant.now());
-  static final Tag TEST_TAG = new Tag(UUID.randomUUID(), TEST_CONVO, "test_tag", Instant.now());
+  static final Tag TEST_TAG = new Tag(UUID.randomUUID(), TEST_CONVO_ID, "test_tag", Instant.now());
   static final User TEST_USER = new User(UUID.randomUUID(), TEST_USERNAME, Instant.now(), "test_password", "test_about");
   static final Message TEST_MESSAGE = new Message(UUID.randomUUID(), TEST_CONVO_ID, UUID.randomUUID(), "test_about", Instant.now());
 

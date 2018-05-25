@@ -123,7 +123,7 @@ public class TagServlet extends HttpServlet {
       List<String> splitTags = Arrays.asList(tags.split(", "));
       for (String tag : splitTags) {
         // TODO: Check if the Tag already exists in TagStore
-        Tag newTag = new Tag(UUID.randomUUID(), conversation, tag.toLowerCase(), Instant.now());
+        Tag newTag = new Tag(UUID.randomUUID(), conversation.getId(), tag.toLowerCase(), Instant.now());
         conversation.addTag(newTag);
       }
       conversationStore.putConversation(conversation);
