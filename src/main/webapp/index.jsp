@@ -51,8 +51,7 @@ User loggedInUser = UserStore.getInstance().getUser(user);
       <h2>Welcome to ~Team 31~'s chat app!</h2>
       <p>
         Who is Team 31, you ask? We are an east coast-based team of CodeUers (plus
-        our PA Will, who is in Sunnyvale, CA): Ellen Fu, Joyce Zhao, Pete Destil,
-        and Ransford Antwi!
+        our PA Will, who is in Sunnyvale, CA): Ellen Fu, Joyce Zhao and Ransford Antwi!
       </p>
 
       <ul>
