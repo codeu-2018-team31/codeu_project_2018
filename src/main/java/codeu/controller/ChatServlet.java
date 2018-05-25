@@ -22,7 +22,6 @@ import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.basic.TagStore;
-
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -173,15 +172,20 @@ public class ChatServlet extends HttpServlet {
     // Remove all but basic styling HTML and img tags from the message content
     Document.OutputSettings settings = new Document.OutputSettings();
     settings.prettyPrint(false);
-    String cleanedMessageContent = Jsoup.clean(messageContent, "",
+    messageContent = Jsoup.clean(messageContent, "",
         Whitelist.basicWithImages(), settings);
+
+    // Parse URL
+    messageContent = messageContent.replaceAll(
+        "([\\w]+\\:\\/\\/[\\S]+)",
+        "<a href=\"$1\">$1</a>");
 
     Message message =
         new Message(
             UUID.randomUUID(),
             conversation.getId(),
             user.getId(),
-            cleanedMessageContent,
+            messageContent,
             Instant.now());
 
     messageStore.addMessage(message);
