@@ -90,15 +90,22 @@ public class TagServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) 
       throws IOException, ServletException {
+
+    String username = (String) request.getSession().getAttribute("user");
+    if (username == null) {
+      // User is not logged in, don't let them see a profile
+      System.out.println("Please login before viewing tagged conversations");
+      response.sendRedirect("/login");
+      return;
+    }
+
     String requestUrl = request.getRequestURI();
     Matcher m = Pattern.compile("^/tag/(.+)").matcher(requestUrl);
     if (!m.find()) {
       System.out.println("wrong URL pattern: " + requestUrl);
       return; // return error 
     }
-
     String extractedTag = m.group(1);
-
     List<String> conversationTitles = new ArrayList<>();
 
     // Sets request attribute to a list of Conversation titles that are associated with the Tag

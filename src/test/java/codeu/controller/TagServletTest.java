@@ -95,6 +95,7 @@ public class TagServletTest {
   @Test
     public void testDoGet() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/tag/" + TEST_TAG.getTag());
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
     
     List<String> conversations = new ArrayList<>();
     conversations.add(TEST_CONVO.getTitle()); 
