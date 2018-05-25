@@ -126,7 +126,7 @@ public class TagServlet extends HttpServlet {
         Tag newTag = new Tag(UUID.randomUUID(), conversation.getId(), tag.toLowerCase(), Instant.now());
         conversation.addTag(newTag);
       }
-      conversationStore.putConversation(conversation);
+      //conversationStore.putConversation(conversation);
       for (Tag tag : conversation.getTags()) {
         System.out.println(tag.getTag());
       }
