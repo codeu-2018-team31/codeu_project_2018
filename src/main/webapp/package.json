@@ -1,0 +1,24 @@
+{
+  "name": "codeu_project_2018",
+  "version": "1.0.0",
+  "description": "Google CodeU project Team 31, 2018",
+  "main": "index.js",
+  "dependencies": {
+    "emoji-js": "^3.4.0",
+    "textcomplete": "^0.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codeu-2018-team31/codeu_project_2018.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codeu-2018-team31/codeu_project_2018/issues"
+  },
+  "homepage": "https://github.com/codeu-2018-team31/codeu_project_2018#readme"
+}
