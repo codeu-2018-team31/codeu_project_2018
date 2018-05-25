@@ -15,6 +15,8 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -26,6 +28,7 @@ public class Conversation {
   public final UUID owner;
   public final Instant creation;
   public final String title;
+  private List<Tag> tags;
 
   /**
    * Constructs a new Conversation.
@@ -40,6 +43,18 @@ public class Conversation {
     this.owner = owner;
     this.creation = creation;
     this.title = title;
+    tags = new ArrayList<>();
+  }
+
+  /** Adds a tag to this Conversation. */
+  public void addTag(Tag tag) {
+    tags.add(tag);
+  }
+
+  /** Returns an alphabetically sorted list of Tags */
+  public List<Tag> getTags() {
+    tags.sort(new TagComparator());
+    return tags;
   }
 
   /** Returns the ID of this Conversation. */

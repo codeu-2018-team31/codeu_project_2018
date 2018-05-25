@@ -15,11 +15,14 @@
 package codeu.controller;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.Tag;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
+import com.google.appengine.repackaged.com.google.api.client.util.Lists;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletException;
@@ -115,6 +118,27 @@ public class ConversationServlet extends HttpServlet {
 
     Conversation conversation =
         new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+
+    // Get all tags
+    String tags = request.getParameter("tags");
+    if (tags != null && tags.length() > 0) {
+      if (!tags.matches("(\\w*(,\\s)?)*")) {
+        request.setAttribute("error", "Please enter tags as comma-separated words with one space between them. Tags can only contain letters and numbers.");
+        request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+        return;
+      }
+
+      List<String> splitTags = Arrays.asList(tags.split(", "));
+      for (String tag : splitTags) {
+        // TODO: Check if Tag already exists in TagStore
+
+        // Create new Tag object. Use the lowercase version of the tag string to
+        // ensure case insensitivity
+        Tag newTag = new Tag(UUID.randomUUID(), conversation.getId(), tag.toLowerCase(), Instant.now());
+        conversation.addTag(newTag);
+      }
+      conversationStore.putConversation(conversation);
+    }
 
     conversationStore.addConversation(conversation);
     response.sendRedirect("/chat/" + conversationTitle);

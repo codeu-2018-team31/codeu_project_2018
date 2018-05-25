@@ -40,6 +40,10 @@ public class ConversationStore {
     return instance;
   }
 
+  public void putConversation(Conversation conversation) {
+    persistentStorageAgent.writeThrough(conversation);
+  }
+
   /**
    * Instance getter function used for testing. Supply a mock for PersistentStorageAgent.
    *

@@ -17,16 +17,21 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.data.User" %>
+<%@ page import="codeu.model.data.Tag" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+String user = (String) request.getSession().getAttribute("user");
+User loggedInUser = UserStore.getInstance().getUser(user);
 %>
 
 <!DOCTYPE html>
 <html>
 <head>
   <title><%= conversation.getTitle() %></title>
+
   <link rel="stylesheet" href="/css/main.css" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/emoji-js/lib/emoji.js"></script>
@@ -47,21 +52,47 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
-      <% if (request.getSession().getAttribute("user") != null) { %>
-    <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
-    <% } else { %>
+    <a href="/about.jsp">About</a>
+    <% if(loggedInUser != null){ %>
+      <a href= <%= "/profile/" + loggedInUser.getId().toString() %> > Hello <%= loggedInUser.getName() %>!</a>
+    <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
     <% } %>
-    <a href="/about.jsp">About</a>
   </nav>
 
   <div id="container">
 
+    <% if(request.getAttribute("error") != null){ %>
+        <h2 style="color:red"><%= request.getAttribute("error") %></h2>
+    <% } %>
+
     <h1><%= conversation.getTitle() %>
       <a href="" style="float: right">&#8635;</a></h1>
 
+    <% if (loggedInUser != null) { %>
+        <label class="form-control-label">Current tags:</label>
+        <p>
+        <% List<Tag> tags = (List<Tag>)request.getAttribute("tags");
+           for (Tag tag : tags) {
+             String tagName = tag.getTag();
+        %>
+          <a href="/tag/<%= tagName %>"><%= tagName %></a> |
+        <% } %>
+        <p>
+
+        <form action="/addtags/<%= conversation.getTitle() %>" method="POST">
+          <div class="form-group">
+            <label class="form-control-label">New tags:</label>
+            <input type="text" name="tags" placeholder="Comma-separated tags" width="200px">
+          </div>
+          <button type="submit">Add tags</button>
+        </form>
+
+        <hr/>
+    <% } %>
     <hr/>
+
 
     <div id="chat">
       <ul>
@@ -69,8 +100,10 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
+        String id = UserStore.getInstance()
+          .getUser(message.getAuthorId()).getId().toString();
     %>
-      <li><strong><%= author %>:</strong> <%= message.getContent() %></li>
+      <li><strong><a href="/profile/<%= id %>"><%= author %></a>:</strong> <%= message.getContent() %></li>
     <%
       }
     %>

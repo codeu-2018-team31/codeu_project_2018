@@ -57,7 +57,7 @@ public class User {
     this.hashedPassword = hashedPassword;
     this.about = "";
   }
-
+  
   /** Returns the ID of this User. */
   public UUID getId() {
     return id;
