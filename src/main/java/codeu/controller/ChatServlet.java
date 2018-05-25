@@ -21,6 +21,7 @@ import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.TagStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -48,6 +49,9 @@ public class ChatServlet extends HttpServlet {
   /** Store class that gives access to Users. */
   private UserStore userStore;
 
+  /** Store class that gives access to Tags. */
+  private TagStore tagStore;
+
   /** Set up state for handling chat requests. */
   @Override
   public void init() throws ServletException {
@@ -55,6 +59,7 @@ public class ChatServlet extends HttpServlet {
     setConversationStore(ConversationStore.getInstance());
     setMessageStore(MessageStore.getInstance());
     setUserStore(UserStore.getInstance());
+    setTagStore(TagStore.getInstance());
   }
 
   /**
@@ -82,6 +87,14 @@ public class ChatServlet extends HttpServlet {
   }
 
   /**
+   * Sets the TagStore used by this servlet. This function provides a common setup method for use
+   * by the test framework or the servlet's init() function.
+   */
+  void setTagStore(TagStore tagStore) {
+    this.tagStore = tagStore;
+  }
+
+  /**
    * This function fires when a user navigates to the chat page. It gets the conversation title from
    * the URL, finds the corresponding Conversation, and fetches the messages in that Conversation.
    * It then forwards to chat.jsp for rendering.
@@ -105,13 +118,16 @@ public class ChatServlet extends HttpServlet {
     List<Message> messages = messageStore.getMessagesInConversation(conversationId);
     
     // Get all of this conversation's tags
-    List<Tag> tags = conversation.getTags();
+    List<Tag> tags = tagStore.getAllTags();
+    List<Tag> convoTags = new ArrayList<>();
     for (Tag tag : tags) {
-      System.out.print(tag.getTag());
+      if (tag.getConversation().equals(conversationId)) {
+        convoTags.add(tag);
+      }
     }
 
     // Pass the List of Tags to chat.jsp
-    request.setAttribute("tags", tags);
+    request.setAttribute("tags", convoTags);
     request.setAttribute("conversation", conversation);
     request.setAttribute("messages", messages);
     request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
