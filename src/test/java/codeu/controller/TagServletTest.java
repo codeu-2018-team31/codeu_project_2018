@@ -20,6 +20,7 @@ import codeu.model.data.Tag;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.TagStore;
 import codeu.model.store.persistence.PersistentStorageAgent;
 
 import codeu.model.store.basic.UserStore;
@@ -39,6 +40,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.UUID;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TagServletTest {
 
@@ -51,7 +54,7 @@ public class TagServletTest {
 
   private ConversationStore conversationStore;
   private MessageStore messageStore;
-
+  private TagStore tagStore;
   private UserStore userStore;
 
   static final String TEST_USERNAME = "test username";
@@ -72,20 +75,38 @@ public class TagServletTest {
 
     mockResponse = Mockito.mock(HttpServletResponse.class);
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
-    Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/profile.jsp"))
+    Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/tag.jsp"))
         .thenReturn(mockRequestDispatcher);
     
     userStore = UserStore.getTestInstance(mockPersistentStorageAgent);
     conversationStore = ConversationStore.getTestInstance(mockPersistentStorageAgent);
     messageStore = MessageStore.getTestInstance(mockPersistentStorageAgent);
+    tagStore = TagStore.getTestInstance(mockPersistentStorageAgent);
 
     tagServlet.setConversationStore(conversationStore);
     tagServlet.setMessageStore(messageStore);
     tagServlet.setUserStore(userStore);
+    tagServlet.setTagStore(tagStore);
 
     conversationStore.addConversation(TEST_CONVO);
+    tagStore.addTag(TEST_TAG);
   }
 
+  @Test
+    public void testDoGet() throws IOException, ServletException {
+    Mockito.when(mockRequest.getRequestURI()).thenReturn("/tag/" + TEST_TAG.getTag());
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
+    
+    List<String> conversations = new ArrayList<>();
+    conversations.add(TEST_CONVO.getTitle()); 
+
+    tagServlet.doGet(mockRequest, mockResponse);
+
+    Mockito.verify(mockRequest).setAttribute("extracted_tag", TEST_TAG.getTag());
+    Mockito.verify(mockRequest).setAttribute("conversations", conversations);
+    Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
+  }
+   
   @Test
   public void testDoPost_UserNotLoggedIn() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/addtags/" + TEST_CONVO.getTitle());
@@ -107,26 +128,10 @@ public class TagServletTest {
   }
 
   @Test
-  public void testDoPost_NoNewTags() throws IOException, ServletException {
-    Mockito.when(mockRequest.getRequestURI()).thenReturn("/addtags/" + TEST_CONVO.getTitle());
-    Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
-
-    userStore.addUser(TEST_USER);
-
-    messageStore.addMessage(TEST_MESSAGE);
-
-    tagServlet.doPost(mockRequest, mockResponse);
-
-    Mockito.verify(mockRequest).setAttribute("conversation", TEST_CONVO);
-    Mockito.verify(mockRequest).setAttribute("tags", TEST_CONVO.getTags());
-    Mockito.verify(mockResponse).sendRedirect("/chat/test_convo");
-  }
-
-  @Test
   public void testDoPost_AddNewTags() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/addtags/" + TEST_CONVO.getTitle());
     Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
-    Mockito.when(mockRequest.getParameter("tags")).thenReturn("test_tags");
+    Mockito.when(mockRequest.getParameter("tags")).thenReturn("test, tags, now");
 
     userStore.addUser(TEST_USER);
 
@@ -135,7 +140,7 @@ public class TagServletTest {
     tagServlet.doPost(mockRequest, mockResponse);
 
     Mockito.verify(mockRequest).setAttribute("conversation", TEST_CONVO);
-    Mockito.verify(mockRequest).setAttribute("tags", TEST_CONVO.getTags());
+    Mockito.verify(mockRequest).setAttribute("tags", tagStore.getTagsInConversation(TEST_CONVO.getId()));
     Mockito.verify(mockResponse).sendRedirect("/chat/test_convo");
   }
 }

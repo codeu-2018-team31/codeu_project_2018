@@ -17,8 +17,7 @@ public class Tag {
    * Constructs a new Tag.
    *
    * @param id the ID of this Tag
-   * @param conversationId the Id of the first Conversation this Tag is associated with.
-   * @param conversations the Ids of the Conversations this Tag belongs to
+   * @param conversationId the Id of the Conversation this Tag is associated with.
    * @param tag the content of this Tag
    * @param creation the creation time of this Tag
    */
@@ -28,18 +27,6 @@ public class Tag {
     this.conversationId = conversationId;
     this.tag = tag;
     this.creation = creation;
-    this.conversations = new ArrayList<>();
-    this.conversations.add(conversationId);
-  }
-
-  /** Adds a Conversation that has this Tag */
-  public void addConversation(UUID conversationId) {
-    conversations.add(conversationId);
-  }
-
-  /** Gets all Conversations that have this Tag */
-  public List<UUID> getConversations() {
-    return conversations;
   }
 
   /** Gets the Conversation that this Tag was created with*/

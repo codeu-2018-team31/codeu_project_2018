@@ -19,6 +19,7 @@ import codeu.model.data.Tag;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.TagStore;
 import com.google.appengine.repackaged.com.google.api.client.util.Lists;
 import java.io.IOException;
 import java.time.Instant;
@@ -39,6 +40,9 @@ public class ConversationServlet extends HttpServlet {
   /** Store class that gives access to Conversations. */
   private ConversationStore conversationStore;
 
+  /** Store class that gives access to Tags. */
+  private TagStore tagStore;
+
   /**
    * Set up state for handling conversation-related requests. This method is only called when
    * running in a server, not when running in a test.
@@ -48,6 +52,7 @@ public class ConversationServlet extends HttpServlet {
     super.init();
     setUserStore(UserStore.getInstance());
     setConversationStore(ConversationStore.getInstance());
+    setTagStore(TagStore.getInstance());
   }
 
   /**
@@ -64,6 +69,14 @@ public class ConversationServlet extends HttpServlet {
    */
   void setConversationStore(ConversationStore conversationStore) {
     this.conversationStore = conversationStore;
+  }
+
+  /**
+   * Sets the TagStore used by this servlet. This function provides a common setup method
+   * for use by the test framework or the servlet's init() function.
+   */
+  void setTagStore(TagStore tagStore) {
+    this.tagStore = tagStore;
   }
 
   /**
@@ -130,17 +143,12 @@ public class ConversationServlet extends HttpServlet {
 
       List<String> splitTags = Arrays.asList(tags.split(", "));
       for (String tag : splitTags) {
-        // TODO: Check if Tag already exists in TagStore
-
-        // Create new Tag object. Use the lowercase version of the tag string to
-        // ensure case insensitivity
         Tag newTag = new Tag(UUID.randomUUID(), conversation.getId(), tag.toLowerCase(), Instant.now());
-        conversation.addTag(newTag);
+        tagStore.addTag(newTag);
       }
-      conversationStore.putConversation(conversation);
-    }
 
     conversationStore.addConversation(conversation);
     response.sendRedirect("/chat/" + conversationTitle);
+    }
   }
 }
