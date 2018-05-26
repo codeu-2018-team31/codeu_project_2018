@@ -147,8 +147,8 @@ public class ConversationServlet extends HttpServlet {
         tagStore.addTag(newTag);
       }
 
+    }
     conversationStore.addConversation(conversation);
     response.sendRedirect("/chat/" + conversationTitle);
-    }
   }
 }
