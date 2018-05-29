@@ -109,11 +109,12 @@ public class TagStore {
     return tagsInConversation;
   }
 
-  /** Check whether a Tag title is already known to the application. */
-  public boolean isTagTaken(String tag) {
+   /** Check whether a Tag is already known to the application. */
+  public boolean isTagTaken(String tagContents) {
+
     // This approach will be pretty slow if we have many Conversations.
     for (Tag t : tags) {
-      if (tag.equals(t.getTag())) {
+      if (tagContents.equals(t.getTag())) {
         return true;
       }
     }

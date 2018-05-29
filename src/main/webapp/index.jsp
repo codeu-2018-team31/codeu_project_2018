@@ -23,6 +23,7 @@ User loggedInUser = UserStore.getInstance().getUser(user);
 %>
 
 <!DOCTYPE html>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
   <title>CodeU Chat App</title>
@@ -51,7 +52,7 @@ User loggedInUser = UserStore.getInstance().getUser(user);
       <h2>Welcome to ~Team 31~'s chat app!</h2>
       <p>
         Who is Team 31, you ask? We are an east coast-based team of CodeUers (plus
-        our PA Will, who is in Sunnyvale, CA): Ellen Fu, Joyce Zhao, and Ransford Antwi!
+        our PA Will, who is in Sunnyvale, CA): Ellen Fu, Joyce Zhao and Ransford Antwi!
       </p>
 
       <ul>

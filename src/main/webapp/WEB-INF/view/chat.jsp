@@ -19,7 +19,7 @@
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.data.Tag" %>
-
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
@@ -31,8 +31,13 @@ User loggedInUser = UserStore.getInstance().getUser(user);
 <html>
 <head>
   <title><%= conversation.getTitle() %></title>
-    
+
   <link rel="stylesheet" href="/css/main.css" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/emoji-js/lib/emoji.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/emoji-js/lib/jquery.emoji.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/node_modules/textcomplete/dist/textcomplete.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/js/emoji-suggest.js"></script>
 
   <script>
     // scroll the chat div to the bottom
@@ -64,7 +69,7 @@ User loggedInUser = UserStore.getInstance().getUser(user);
 
     <h1><%= conversation.getTitle() %>
       <a href="" style="float: right">&#8635;</a></h1>
-    
+
     <% if (loggedInUser != null) { %>
         <label class="form-control-label">Current tags:</label>
         <p>
@@ -75,7 +80,7 @@ User loggedInUser = UserStore.getInstance().getUser(user);
           <a href="/tag/<%= tagName %>"><%= tagName %></a> |
         <% } %>
         <p>
-  
+
         <form action="/addtags/<%= conversation.getTitle() %>" method="POST">
           <div class="form-group">
             <label class="form-control-label">New tags:</label>
@@ -83,11 +88,11 @@ User loggedInUser = UserStore.getInstance().getUser(user);
           </div>
           <button type="submit">Add tags</button>
         </form>
-  
+
         <hr/>
     <% } %>
     <hr/>
-    
+
 
     <div id="chat">
       <ul>
@@ -109,7 +114,7 @@ User loggedInUser = UserStore.getInstance().getUser(user);
 
     <% if (request.getSession().getAttribute("user") != null) { %>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
-        <input type="text" name="message">
+        <input type="text" name="message" id="userInput"></input>
         <br/>
         <button type="submit">Send</button>
     </form>
