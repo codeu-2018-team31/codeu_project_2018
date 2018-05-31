@@ -12,3 +12,7 @@ target
 
 # Ignore temp files from Sublime.
 ._.*
+
+# Ignore node modules
+node_modules/
+node/
