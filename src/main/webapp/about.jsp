@@ -51,7 +51,6 @@ User loggedInUser = UserStore.getInstance().getUser(user);
       <p>
         This is a Chat App created by Spring 2018 CodeU Team 31! 
         We are a group of college students from around the East Coast: Ellen, Joyce, and Ransford. 
-
         Oh, and we have an awesome PA, Will! 
         Stay tuned to see this Chat App get more come to life over the semester!
       </p>
