@@ -168,6 +168,7 @@ public class TagServlet extends HttpServlet {
     if (tags != null && tags.length() > 0) {
       if (!tags.matches("(\\w*(,\\s)?)*")) {
         request.setAttribute("error", "Please enter tags as comma-separated words with one space between them. Tags can only contain letters and numbers.");
+        request.setAttribute("tags", new ArrayList<>());
         request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
         return;
       }
