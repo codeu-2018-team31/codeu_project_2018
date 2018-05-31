@@ -154,7 +154,7 @@ public class ConversationServletTest {
     Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
     Mockito.when(mockSession.getAttribute("password")).thenReturn(TEST_PASSWORD);
     Mockito.when(mockSession.getAttribute("about")).thenReturn(TEST_ABOUT);
-    Mockito.when(mockRequest.getParameter("tags")).thenReturn(null);
+    Mockito.when(mockRequest.getParameter("tags")).thenReturn("");
 
     User fakeUser = new User(UUID.randomUUID(), TEST_USERNAME, Instant.now(), TEST_PASSWORD, TEST_ABOUT);
     Mockito.when(mockUserStore.getUser(TEST_USERNAME)).thenReturn(fakeUser);
