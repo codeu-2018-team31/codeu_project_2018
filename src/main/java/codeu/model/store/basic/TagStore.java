@@ -18,7 +18,9 @@ import codeu.model.data.Tag;
 import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -59,12 +61,12 @@ public class TagStore {
   private PersistentStorageAgent persistentStorageAgent;
 
   /** The in-memory list of Tags. */
-  private List<Tag> tags;
+  private Set<Tag> tags;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private TagStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
-    tags = new ArrayList<>();
+    tags = new HashSet<>();
   }
 
   /**
@@ -85,7 +87,7 @@ public class TagStore {
   }
 
   /** Access the current set of tags known to the application. */
-  public List<Tag> getAllTags() {
+  public Set<Tag> getAllTags() {
     return tags;
   }
 
@@ -96,9 +98,9 @@ public class TagStore {
   }
 
   /** Access the current set of Tags within the given Conversation. */
-  public List<Tag> getTagsInConversation(UUID conversationId) {
+  public Set<Tag> getTagsInConversation(UUID conversationId) {
 
-    List<Tag> tagsInConversation = new ArrayList<>();
+    Set<Tag> tagsInConversation = new HashSet<>();
 
     for (Tag tag : tags) {
       if (tag.getConversation().equals(conversationId)) {
@@ -129,7 +131,7 @@ public class TagStore {
   }
 
   /** Sets the List of Tags stored by this TagStore. */
-  public void setTags(List<Tag> tags) {
+  public void setTags(Set<Tag> tags) {
     this.tags = tags;
   }
 }

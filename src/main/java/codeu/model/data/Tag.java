@@ -59,7 +59,7 @@ public class Tag {
     }
 
     Tag other = (Tag) o;
-    if (other.getTag().equals(tag)) {
+    if (other.getTag().equals(tag) && other.getConversation().equals(conversationId)) {
       return true;
     }
     return false;

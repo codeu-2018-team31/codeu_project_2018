@@ -25,6 +25,7 @@ import codeu.model.store.basic.TagStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.RequestDispatcher;
@@ -108,7 +109,7 @@ public class ChatServletTest {
             UUID.randomUUID(),
             "test tag",
             Instant.now()));
-    Mockito.when(mockTagStore.getAllTags()).thenReturn(fakeTagList);  
+    Mockito.when(mockTagStore.getAllTags()).thenReturn(new HashSet<>(fakeTagList));  
 
     chatServlet.doGet(mockRequest, mockResponse);
 

@@ -10,6 +10,8 @@ import codeu.model.store.basic.UserStore;
 import codeu.model.store.basic.TagStore;
 import codeu.model.store.persistence.PersistentDataStoreException;
 import codeu.model.store.persistence.PersistentStorageAgent;
+
+import java.util.HashSet;
 import java.util.List;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -34,7 +36,7 @@ public class ServerStartupListener implements ServletContextListener {
       MessageStore.getInstance().setMessages(messages);
 
       List<Tag> tags = PersistentStorageAgent.getInstance().loadTags();
-      TagStore.getInstance().setTags(tags);
+      TagStore.getInstance().setTags(new HashSet<>(tags));
 
     } catch (PersistentDataStoreException e) {
       System.err.println("Server didn't start correctly. An error occurred during Datastore load!");

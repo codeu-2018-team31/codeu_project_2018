@@ -14,6 +14,7 @@
   limitations under the License.
 --%>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Set" %>
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
@@ -73,7 +74,7 @@ User loggedInUser = UserStore.getInstance().getUser(user);
     <% if (loggedInUser != null) { %>
         <label class="form-control-label">Current tags:</label>
         <p>
-        <% List<Tag> tags = (List<Tag>) request.getAttribute("tags");
+        <% Set<Tag> tags = (Set<Tag>) request.getAttribute("tags");
            for (Tag tag : tags) {
              String tagName = tag.getTag();
         %>

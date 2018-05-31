@@ -25,7 +25,9 @@ import codeu.model.store.basic.TagStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.ServletException;
@@ -118,7 +120,7 @@ public class ChatServlet extends HttpServlet {
     List<Message> messages = messageStore.getMessagesInConversation(conversationId);
     
     // Get all of this conversation's tags
-    List<Tag> tags = tagStore.getAllTags();
+    Set<Tag> tags = tagStore.getAllTags();
     List<Tag> convoTags = new ArrayList<>();
     for (Tag tag : tags) {
       if (tag.getConversation().equals(conversationId)) {
@@ -127,7 +129,7 @@ public class ChatServlet extends HttpServlet {
     }
 
     // Pass the List of Tags to chat.jsp
-    request.setAttribute("tags", convoTags);
+    request.setAttribute("tags", new HashSet<>(convoTags));
     request.setAttribute("conversation", conversation);
     request.setAttribute("messages", messages);
     request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);

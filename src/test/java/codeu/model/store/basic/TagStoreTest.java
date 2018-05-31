@@ -3,10 +3,16 @@ package codeu.model.store.basic;
 import codeu.model.data.Tag;
 import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;
+
+import static org.junit.Assert.assertTrue;
+
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,16 +47,16 @@ public class TagStoreTest {
     tagList.add(TAG_ONE);
     tagList.add(TAG_TWO);
     tagList.add(TAG_THREE);
-    tagStore.setTags(tagList);
+    tagStore.setTags(new HashSet<>(tagList));
   }
 
   @Test
   public void testGetTagsInConversation() {
-    List<Tag> resultTags = tagStore.getTagsInConversation(conversationOne.getId());
+    Set<Tag> resultTags = tagStore.getTagsInConversation(conversationOne.getId());
 
     Assert.assertEquals(2, resultTags.size());
-    assertEquals(TAG_ONE, resultTags.get(0));
-    assertEquals(TAG_TWO, resultTags.get(1));
+    assertTrue(resultTags.contains(TAG_ONE));
+    assertTrue(resultTags.contains(TAG_TWO));
   } 
 
   @Test
@@ -61,7 +67,7 @@ public class TagStoreTest {
         new Tag(UUID.randomUUID(), inputConversation.getId(), "test_tag", Instant.now());
       tagStore.addTag(inputTag);
     Tag resultTag =
-        tagStore.getTagsInConversation(inputConversation.getId()).get(0);
+        tagStore.getTagsInConversation(inputConversation.getId()).iterator().next();
 
     assertEquals(inputTag, resultTag);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputTag);
