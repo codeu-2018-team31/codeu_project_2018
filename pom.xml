@@ -144,7 +144,7 @@
                 <arguments>install</arguments>
                 <workingDirectory>${basedir}/src/main/webapp</workingDirectory>
             </configuration>
-        </execution>
+          </execution>
         </executions>
       </plugin>
     </plugins>
