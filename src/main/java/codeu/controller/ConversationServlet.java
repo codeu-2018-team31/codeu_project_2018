@@ -146,9 +146,8 @@ public class ConversationServlet extends HttpServlet {
         Tag newTag = new Tag(UUID.randomUUID(), conversation.getId(), tag.toLowerCase(), Instant.now());
         tagStore.addTag(newTag);
       }
-
+    }
     conversationStore.addConversation(conversation);
     response.sendRedirect("/chat/" + conversationTitle);
-    }
   }
 }

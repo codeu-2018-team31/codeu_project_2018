@@ -149,6 +149,29 @@ public class ConversationServletTest {
   }
 
   @Test
+  public void testDoPost_NewConversation_NoTags() throws IOException, ServletException {
+    Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn(TEST_CONVERSATION);
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
+    Mockito.when(mockSession.getAttribute("password")).thenReturn(TEST_PASSWORD);
+    Mockito.when(mockSession.getAttribute("about")).thenReturn(TEST_ABOUT);
+    Mockito.when(mockRequest.getParameter("tags")).thenReturn("");
+
+    User fakeUser = new User(UUID.randomUUID(), TEST_USERNAME, Instant.now(), TEST_PASSWORD, TEST_ABOUT);
+    Mockito.when(mockUserStore.getUser(TEST_USERNAME)).thenReturn(fakeUser);
+
+    Mockito.when(mockConversationStore.isTitleTaken(TEST_CONVERSATION)).thenReturn(false);
+
+    conversationServlet.doPost(mockRequest, mockResponse);
+
+    ArgumentCaptor<Conversation> conversationArgumentCaptor =
+        ArgumentCaptor.forClass(Conversation.class);
+    Mockito.verify(mockConversationStore).addConversation(conversationArgumentCaptor.capture());
+    Assert.assertEquals(conversationArgumentCaptor.getValue().getTitle(), TEST_CONVERSATION);
+
+    Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
+  }
+
+  @Test
   public void testDoPost_NewConversation() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn(TEST_CONVERSATION);
     Mockito.when(mockSession.getAttribute("user")).thenReturn(TEST_USERNAME);
