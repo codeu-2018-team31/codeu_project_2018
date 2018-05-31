@@ -16,3 +16,4 @@ target
 # Ignore node modules
 node_modules/
 node/
+package-lock.json
